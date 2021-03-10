@@ -3,16 +3,30 @@
 <title>Login</title>
 
 {% block content %}
-    <h3>LOGIN</h3>
-<form method="POST" action=""> {% csrf_token %}
+
+{% load socialaccount %}
+    <h3>Login with google form</h3>
+    {% if user.is_authenticated %}
+        {% url 'home' %}
+    {% else %}
+      <a href="{% provider_login_url 'google' %}">Login with Google</a>
+      {% endif %}
+
+    <h3>Or login with standart method</h3>
+
+    <form method="POST" action=""> {% csrf_token %}
     Login <input type="text" name="username" placeholder="Username" class="form-control"> <br>
     Password <input type="password" name="password" placeholder="Password" class="form-control"><br>
     <input type="submit" value="Login"><br><br>
-    Don't have an account? <a href="{% url 'register' %}">Sign Up</a>
+
+        Don't have an account? <a href="{% url 'register' %}">Sign Up</a><br>
 
     {% for message in messages %}
         <p id="messages">{{ message }}</p>
     {% endfor %}
 <form/>
+
+
+
 
 {% endblock %}
