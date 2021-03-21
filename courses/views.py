@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from courses.decorators import unauthenticated_user, allower_users, admin_only
 from django.contrib.auth.models import Group
+from courses.models import Customer
+
 
 # Create your views here.
 
@@ -34,6 +36,9 @@ def registration_page(request):
 
             group = Group.objects.get(name="customer")
             user.groups.add(group)
+            Customer.objects.create(
+                user=user,
+            )
 
             messages.success(request, 'Account was created for ' + username)
 
@@ -66,6 +71,9 @@ def logout_page(request):
     return redirect('login')
 
 
+@login_required(login_url='login')
+@allower_users(allowed_roles=['customer'])
 def user_page(request):
+
     context = {}
-    return render(request, 'courses/user.html',context)
+    return render(request, 'courses/user.html', context)
