@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 from courses.views import home, course, registration_page, login_page, logout_page, user_page
 
@@ -33,3 +36,5 @@ urlpatterns = [
     path('user/', user_page, name='user'),
     path('course/', course, name='course'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
