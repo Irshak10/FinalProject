@@ -5,23 +5,26 @@
 {% block content %}
 
 {% load socialaccount %}
-    <h3>Login with google form</h3>
+    <h2>Login with google form</h2>
     <a href="{% provider_login_url 'google' %}">Login with Google</a>
 
-    <h3>Or login with standart method</h3>
+    <h2>Or login with standart method</h2>
 
     <form method="POST" action="">
         {% csrf_token %}
-    Login <input type="text" name="username" placeholder="Username" class="form-control"> <br>
-    Password <input type="password" name="password" placeholder="Password" class="form-control"><br>
-    <input type="submit" value="Login"><br><br>
+        <label for="fname">Login:</label><br>
+        <input type="text" name="username" placeholder="Username" class="form-control"><br><br>
+        <label for="lname">Password:</label><br>
+        <input type="password" name="password" placeholder="Password" class="form-control"><br><br>
+        <input type="submit" value="Login"><br><br>
 
         Don't have an account? <a href="{% url 'register' %}">Sign Up</a><br>
 
-    {% for message in messages %}
-        <p id="messages">{{ message }}</p>
-    {% endfor %}
-<form/>
+            {% for message in messages %}
+                <p id="messages">{{ message }}</p>
+            {% endfor %}
+
+    <form/>
 
 
 {% endblock %}
