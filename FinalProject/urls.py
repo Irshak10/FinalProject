@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 
-from courses.views import home, course, registration_page, login_page, logout_page
+from courses.views import home, course, registration_page, login_page, logout_page, user_page
 
 
 urlpatterns = [
@@ -29,5 +29,7 @@ urlpatterns = [
     path('register/', registration_page, name='register'),
     path('logout/', logout_page, name='logout'),
     path('', home, name='home'),
+    path('home/', home, name='home'),
+    path('user/', user_page, name='user'),
     path('course/', course, name='course'),
 ]
