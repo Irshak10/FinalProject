@@ -1,0 +1,30 @@
+{% extends 'base-testing.html' %}
+
+{% block title %}
+    Мои курсы
+{% endblock %}
+
+{% block main %}
+
+    {% if user_test_cases %}
+        <table id="available-tests">
+            <tr>
+                <th>Название</th>
+                <th>Проходной балл</th>
+                <th>Описание</th>
+                <th>Пройти до</th>
+            </tr>
+            {% for test_case in user_test_cases %}
+                <tr>
+                    <td><strong><a href="{% url 'test_case' test_case.test_case.id %}">{{ test_case.test_case }}</a></strong></td>
+                    <td>{{ test_case.target_score }}</td>
+                    <td>{{ test_case.test_case.description }}</td>
+                    <td>{{ test_case.date_expired }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        Нет назначенных курсов
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base-testing.html' %}
+
+{% block title %}
+    Вопрос {{ questions.number }} из {{ questions.paginator.num_pages }}
+{% endblock %}
+
+{% block main %}
+
+    <form method="post">
+        {% csrf_token %}
+        {% for question in questions.object_list %}
+
+            Вопрос {{ questions.number }} из {{ questions.paginator.num_pages }}<br>
+            {{ question.text }}<hr>
+            <input type="hidden" value="{{ question.id }}" name="question">
+
+            {% for answer in question.answer.all %}
+                <input type="{{ question.answer_type }}" name="answer" value="{{ answer.id }}">{{ answer.text }}<br>
+            {% endfor %}
+
+        {% endfor %}
+        <div class="next-question">
+            {% if questions.has_next %}
+                <input type="hidden" value="{{ questions.next_page_number }}" name="page">
+                <input type="submit" value="Далее">
+            {% else %}
+                <input type="submit" value="Закончить тест" name="complete">
+            {% endif %}
+        </div>
+    </form>
+
+{% endblock %}

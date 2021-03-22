@@ -1,0 +1,26 @@
+{% extends 'base-testing.html' %}
+
+{% block title %}
+    Результат
+{% endblock %}
+
+{% block main %}
+    <table id="available-tests">
+        <tr>
+            <th style="width: 75%">Итоговый балл: {{ result_score }}</th>
+            <th>{{ status }}</th>
+        </tr>
+    </table>
+    <table id="available-tests">
+        <tr>
+            <th style="width: 75%">Вопрос</th>
+            <th>Ответ</th>
+        </tr>
+        {% for question, answer_status in result_table_data.items %}
+            <tr>
+                <td>{{ question }}</td>
+                <td>{{ answer_status }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
