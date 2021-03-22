@@ -38,7 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'courses',
+    'testing',
+    'django_crontab',
+    'nested_admin',
+
+    'users',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -46,7 +50,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 ]
 
-SITE_ID = 1
+SITE_ID = 2
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -63,8 +67,7 @@ ROOT_URLCONF = 'FinalProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -113,9 +116,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'  # en-us
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Stockholm'  # UTC+2
 
 USE_I18N = True
 
@@ -128,6 +131,30 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = 'images/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+
+# python manage.py crontab add
+CRONJOBS = [
+    ('*/1 * * * *', 'testing.testing_logic.check_test_case_expired_date')
+    ]
+
+# Send email options
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'corporate.learning.users@gmail.com'
+EMAIL_HOST_PASSWORD = 'RXnJ577jV37v2Mcx'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'corporate.learning.users@gmail.com'
+
 
 LOGIN_REDIRECT_URL = '/'
 
@@ -147,11 +174,3 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
-
-MEDIA_URL = 'images/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')

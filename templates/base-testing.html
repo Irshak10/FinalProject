@@ -1,0 +1,56 @@
+{% load static %}
+{% load tags %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'testing/css/style.css' %}">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+
+    <div class="menu">
+        <ul class="content">
+            <li class="left-item"><a href="{% url 'index' %}">Корпортативный портал обучения</a></li>
+            <li class="right-item"><a href="{% url 'logout' %}">Выход {{ user.username }}</a></li>
+            <li class="right-item"><a href="">Личный кабинет</a></li>
+            <li class="right-item"><a href="">Новости</a></li>
+            <li class="right-item"><a href="">Библиотека</a></li>
+            <li class="right-item"><a href="{% url 'user_test_cases' %}" class="notification">
+                Мои курсы
+                {% number_of_tests request user.id as tests %}
+                {% if tests %}
+                    <span class="badge">{% number_of_tests request user.id %}</span>
+                {% endif %}</a></li>
+        </ul>
+    </div>
+
+    <div class="main">
+        {% block main %}{% endblock %}
+    </div>
+
+    <div class="footer">
+        <ul class="content">
+            <li class="left-item">
+                <a href="http://geekhub.ck.ua/">© 2021 GeekHub. All rights reserved</a>
+            </li>
+            <li class="left-item">
+                <a href="https://www.facebook.com/geekhub.ck">
+                    <img src="{% static 'testing/icons/fb.png' %}">
+                </a>
+            </li>
+            <li class="left-item">
+                <a href="https://www.youtube.com/channel/UC26D4PgkuijRQSATafA-6OA">
+                    <img src="{% static 'testing/icons/youtube.png' %}">
+                </a>
+            </li>
+        </li>
+        </ul>
+    </div>
+
+
+</body>
+</html>
