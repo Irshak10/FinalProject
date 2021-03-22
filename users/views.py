@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from users.decorators import unauthenticated_user, allower_users
 from django.contrib.auth.models import Group
 from users.models import Customer
+from testing.templates import *
 
 
 @unauthenticated_user
@@ -43,7 +44,7 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('user')
         else:
             messages.info(request, 'Username or password is incorrect')
 
