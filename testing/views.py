@@ -6,19 +6,19 @@ from users.decorators import unauthenticated_user, allower_users
 from testing.testing_logic import *
 
 
-@unauthenticated_user
+@login_required(login_url='login')
 def index(request):
     return render(request, 'testing/index.html', context={})
 
 
-@unauthenticated_user
+@login_required(login_url='login')
 # @allower_users(allowed_roles=['customer'])
 def user_test_cases(request):
     context = {'user_test_cases': UserTestCase.objects.filter(complete=False, user=request.user).order_by('date_expired')}
     return render(request, 'testing/user-test-cases.html', context=context)
 
 
-@unauthenticated_user
+@login_required(login_url='login')
 # @allower_users(allowed_roles=['customer'])
 def test_case(request, test_id):
     test_available = UserTestCase.objects.filter(complete=False, test_case=test_id, user=request.user)
@@ -33,7 +33,7 @@ def test_case(request, test_id):
         return redirect(reverse('user_test_cases'))
 
 
-@unauthenticated_user
+@login_required(login_url='login')
 # @allower_users(allowed_roles=['customer'])
 def questions(request, test_id):
     test_questions = Question.objects.filter(test_case_id=test_id)
@@ -56,7 +56,7 @@ def questions(request, test_id):
     return render(request, 'testing/questions.html', context=context)
 
 
-@unauthenticated_user
+@login_required(login_url='login')
 # @allower_users(allowed_roles=['customer'])
 def results(request, test_id):
     try:
