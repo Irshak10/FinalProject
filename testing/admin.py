@@ -1,7 +1,5 @@
 from django.contrib import admin
-
 from nested_admin.nested import NestedTabularInline, NestedModelAdmin
-
 from testing.models import *
 from testing.testing_logic import send_notification_email
 from users.models import Customer

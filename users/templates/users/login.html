@@ -1,24 +1,26 @@
 {% extends 'base-users.html' %}
 
-<title>Login</title>
+{% block title %}
+    Форма Логина
+{% endblock %}
 
 {% block content %}
 
 {% load socialaccount %}
-    <h2>Login with google form</h2>
-    <a href="{% provider_login_url 'google' %}">Login with Google</a>
+    <h2>Логин через Google форму</h2>
+    <a href="{% provider_login_url 'google' %}">Логин при помощи Google</a>
 
-    <h2>Or login with standart method</h2>
+    <h2>Или логин при помощи стандартногой формы</h2>
 
     <form method="POST" action="">
         {% csrf_token %}
-        <label for="fname">Login:</label><br>
+        <label for="fname">Логин:</label><br>
         <input type="text" name="username" placeholder="Username" class="form-control"><br><br>
-        <label for="lname">Password:</label><br>
+        <label for="password">Пароль:</label><br>
         <input type="password" name="password" placeholder="Password" class="form-control"><br><br>
-        <input type="submit" value="Login"><br><br>
+        <input type="submit" value="Логин"><br><br>
 
-        Don't have an account? <a href="{% url 'register' %}">Sign Up</a><br>
+        Не имеете аккаунт для логина? <a href="{% url 'register' %}">Зарегистрироваться</a><br>
 
             {% for message in messages %}
                 <p id="messages">{{ message }}</p>

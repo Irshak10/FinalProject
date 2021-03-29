@@ -15,8 +15,8 @@
     <div class="menu">
         <ul class="content">
             <li class="left-item"><a href="{% url 'index' %}">Корпортативный портал обучения</a></li>
-            <li class="right-item"><a href="{% url 'logout' %}">Выход {{ user.username }}</a></li>
-            <li class="right-item"><a href="">Личный кабинет</a></li>
+            <li class="right-item"><a href="{% url 'logout' %}">Выход, {{ user.username }}</a></li>
+            <li class="right-item"><a href="{% url 'user' %}">Личный кабинет</a></li>
             <li class="right-item"><a href="">Новости</a></li>
             <li class="right-item"><a href="">Библиотека</a></li>
             <li class="right-item"><a href="{% url 'user_test_cases' %}" class="notification">

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from users.forms import CreateUserForm
+from users.forms import CreateUserForm, CustomerForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -58,8 +58,15 @@ def logout_page(request):
 
 
 @login_required(login_url='login')
-@allower_users(allowed_roles=['customer'])
+@allower_users(allowed_roles=['customer', 'admin'])
 def user_page(request):
+    customer = request.user.customer
+    form = CustomerForm(instance=customer)
 
-    context = {}
+    if request.method == 'POST':
+        form = CustomerForm(request.POST, request.FILES, instance=customer)
+        if form.is_valid():
+            form.save()
+
+    context = {'form': form}
     return render(request, 'users/user.html', context)
