@@ -1,19 +1,22 @@
 {% extends 'base-users.html' %}
-<title>Register Account</title>
+
+{% block title %}
+    Регистрация
+{% endblock %}
 
 {% block content %}
 
-    <h3>REGISTER ACCOUNT</h3>
+    <h3>Зарегистрировать новый аккаунт</h3>
     <form method="POST" action=""> {% csrf_token %}
-        {{ form.username.label }} {{ form.username }}<br>
-        {{ form.email.label }} {{ form.email }}<br>
-        {{ form.password1.label }} {{ form.password1 }}<br>
-        {{ form.password2.label }} {{ form.password2 }}<br><br>
+        {{ form.username.label }} {{ form.username }}<br><br>
+        {{ form.email.label }} {{ form.email }}<br><br>
+        {{ form.password1.label }} {{ form.password1 }}<br><br>
+        {{ form.password2.label }} {{ form.password2 }}<br><br><br>
 
-        <input type="submit" name="Create user"><br><br>
+        <input type="submit" value="Создать новый аккаунт"><br><br>
         {{ form.errors }}
 
-        Already have an account? <a href="{% url 'login' %}">Login</a>
+        Уже есть зарегистрированный аккаунт? <a href="{% url 'login' %}">Логин</a>
     </form>
 
 {% endblock %}
