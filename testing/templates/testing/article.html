@@ -1,0 +1,57 @@
+{% extends 'base-testing.html' %}
+{% load static %}
+
+{% block title %}
+    {{ article.title }}
+{% endblock %}
+
+{% block main %}
+
+    <div class="article-border">
+        <div class="article-container">
+            <p id="article-title"><strong>{{ article.title }}</strong></p>
+            <p style="text-align: left; font-size: 13px">{{ article.created }}</p>
+            {% if article.header_image %}
+                <img src="{{ MEDIA_URL }}{{ article.header_image }}" style="width: 100%"><hr>
+            {% endif %}
+            {% for paragraph in article.paragraph.all %}
+                {{ paragraph.text }}<br>
+                {% for image in paragraph.image.all %}
+                    <img src="{{ MEDIA_URL }}{{ image.image }}" style="width: 100%">
+                {% endfor %}
+            {% endfor %}
+            {% if article.source %}
+                <a href="{{ article.source }}">Источник</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <style>
+        .article-border{
+            margin-left: auto;
+            margin-right: auto;
+            width: 65%;
+            border: 1px solid #333;
+        }
+
+        .article-container {
+            margin-left: auto;
+            margin-right: auto;
+            width: 95%;
+            font-family: 'Arimo', sans-serif;
+            font-size: 16pt;
+            text-align: justify;
+        }
+
+        #article-title {
+            font-size: xxx-large;
+            text-align: center;
+        }
+
+        .article-container a {
+            text-decoration: none;
+            font-size: 13px;
+        }
+    </style>
+
+{% endblock %}

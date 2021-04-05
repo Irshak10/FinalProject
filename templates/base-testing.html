@@ -7,7 +7,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{% static 'testing/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
@@ -15,10 +15,16 @@
     <div class="menu">
         <ul class="content">
             <li class="left-item"><a href="{% url 'index' %}">Корпортативный портал обучения</a></li>
-            <li class="right-item"><a href="{% url 'logout' %}">Выход, {{ user.username }}</a></li>
+            <li class="left-item">
+                <form method="get" action="{% url 'search' %}">
+                    <input type="search" placeholder="Что ищем?" name="search">
+                    <button type="submit">Поиск</button>
+                </form>
+            </li>
+            <li class="right-item"><a href="{% url 'logout' %}">Выход {{ user.username }}</a></li>
             <li class="right-item"><a href="{% url 'user' %}">Личный кабинет</a></li>
-            <li class="right-item"><a href="">Новости</a></li>
-            <li class="right-item"><a href="">Библиотека</a></li>
+            <li class="right-item"><a href="{% url 'all_news' %}">Новости</a></li>
+            <li class="right-item"><a href="{% url 'library' %}">Библиотека</a></li>
             <li class="right-item"><a href="{% url 'user_test_cases' %}" class="notification">
                 Мои курсы
                 {% number_of_tests request user.id as tests %}
@@ -30,25 +36,59 @@
 
     <div class="main">
         {% block main %}{% endblock %}
+
+        <button onclick="topFunction()" id="myBtn" title="Go to top">Наверх</button>
+        <script>
+            //Get the button:
+            mybutton = document.getElementById("myBtn");
+
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+              if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+              } else {
+                mybutton.style.display = "none";
+              }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+              document.body.scrollTop = 0; // For Safari
+              document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
     </div>
 
     <div class="footer">
-        <ul class="content">
-            <li class="left-item">
-                <a href="http://geekhub.ck.ua/">© 2021 GeekHub. All rights reserved</a>
-            </li>
-            <li class="left-item">
-                <a href="https://www.facebook.com/geekhub.ck">
-                    <img src="{% static 'testing/icons/fb.png' %}">
-                </a>
-            </li>
-            <li class="left-item">
-                <a href="https://www.youtube.com/channel/UC26D4PgkuijRQSATafA-6OA">
-                    <img src="{% static 'testing/icons/youtube.png' %}">
-                </a>
-            </li>
-        </li>
-        </ul>
+        <span>
+            <a class="copyright" href="http://geekhub.ck.ua/">© 2021 GeekHub. All rights reserved</a>
+        </span>
+        <span>
+            <a class="social-media-links" href="https://www.facebook.com/geekhub.ck">
+                <img src="{% static '/icons/fb.png' %}" width="30pt">
+            </a>
+            <a class="social-media-links" href="https://www.youtube.com/channel/UC26D4PgkuijRQSATafA-6OA">
+                <img src="{% static '/icons/youtube.png' %}" width="30pt">
+            </a>
+        </span>
+
+{#        <ul class="content">#}
+{#            <li class="left-item">#}
+{#                <a href="http://geekhub.ck.ua/">© 2021 GeekHub. All rights reserved</a>#}
+{#            </li>#}
+{#            <li class="left-item">#}
+{#                <a href="https://www.facebook.com/geekhub.ck">#}
+{#                    <img src="{% static 'testing/icons/fb.png' %}">#}
+{#                </a>#}
+{#            </li>#}
+{#            <li class="left-item">#}
+{#                <a href="https://www.youtube.com/channel/UC26D4PgkuijRQSATafA-6OA">#}
+{#                    <img src="{% static 'testing/icons/youtube.png' %}">#}
+{#                </a>#}
+{#            </li>#}
+{#        </ul>#}
     </div>
 
 
