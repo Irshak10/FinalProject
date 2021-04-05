@@ -1,13 +1,13 @@
 {% extends 'base-testing.html' %}
 
 {% block title %}
-    Мои курсы
+    Проверяем знания...
 {% endblock %}
 
 {% block main %}
-
+    {% load static %}
     {% if user_test_cases %}
-        <table id="available-tests">
+        <table id="content-table-1" style="border: 3px outset lightskyblue">
             <tr>
                 <th>Название</th>
                 <th>Проходной балл</th>
@@ -16,7 +16,7 @@
             </tr>
             {% for test_case in user_test_cases %}
                 <tr>
-                    <td><strong><a href="{% url 'test_case' test_case.test_case.id %}">{{ test_case.test_case }}</a></strong></td>
+                    <td><strong><a href="{% url 'test_case' test_case.id test_case.test_case.id %}">{{ test_case.test_case }}</a></strong></td>
                     <td>{{ test_case.target_score }}</td>
                     <td>{{ test_case.test_case.description }}</td>
                     <td>{{ test_case.date_expired }}</td>
@@ -24,7 +24,9 @@
             {% endfor %}
         </table>
     {% else %}
-        Нет назначенных курсов
+        <div class="nothing-to-show-message">
+            <div><img src="{% static 'icons/nothing_to_show.png' %}"></div>
+        </div>
     {% endif %}
 
 {% endblock %}

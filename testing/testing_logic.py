@@ -1,8 +1,10 @@
 from django.core.paginator import Paginator
-from django.core.mail import send_mail
-from django.utils import timezone
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
+from django.utils import timezone
+from django.core.mail import send_mail
+
+from celery import shared_task
 
 from testing.models import *
 
@@ -24,8 +26,8 @@ def test_case_result_score(answers):
 
 
 # обновляет результаты теста в зависимости от успешности прохождения
-def update_test_results(user, test_id, result_score):
-    user_test = UserTestCase.objects.get(test_case_id=test_id, user=user)
+def update_test_results(user, user_test_id, result_score):
+    user_test = UserTestCase.objects.get(id=user_test_id, user=user)
     user_test.complete = True
     user_test.result_score = result_score
     if user_test.target_score > result_score:
@@ -42,7 +44,7 @@ def update_user_progress(user_id, result_score):
     user_progress, created = UserProgress.objects.get_or_create(user_id=user_id)
     user_progress.total_number_of_tests_passed += 1
     user_progress.total_score += result_score
-    user_progress.save()
+    user_progress.update_average_score_and_rating()
     return
 
 
@@ -69,7 +71,24 @@ def get_data_for_result_table(all_answers):
     return result_data
 
 
+# создание необходимых аргументов для последующей отправки через email
+def create_notification_email(user_test_case_id):
+    user_test_case = UserTestCase.objects.get(id=user_test_case_id)
+    user = user_test_case.user
+    subject = 'New test case available'
+    html_message = render_to_string('testing/notification-about-test-case.html', {'user': user, 'test': user_test_case})
+    message = strip_tags(html_message)
+    send_notification_email_task.delay(subject, message, user.email, html_message)
+
+
+# отправлет email пользователю
+@shared_task()
+def send_notification_email_task(subject, message, email, html_message):
+    send_mail(subject, message, None, [email], fail_silently=False, html_message=html_message)
+
+
 # если тест не пройден до указанной даты, он засчитывается как "просроченный" с 0 баллов
+@shared_task()
 def check_test_case_expired_date():
     test_cases = UserTestCase.objects.filter(complete=False)
     for test_case in test_cases:
@@ -80,13 +99,3 @@ def check_test_case_expired_date():
             test_case.test_case_result = 'Просрочен'
             test_case.save()
             update_user_progress(test_case.user.id, test_case.result_score)
-
-
-# отправлет имейл пользователю в виде html страницы
-def send_notification_email(user_test_case_id):
-    user_test_case = UserTestCase.objects.get(id=user_test_case_id)
-    user = user_test_case.user
-    subject = 'New test case available'
-    html_message = render_to_string('testing/notification-about-test-case.html', {'user': user, 'test': user_test_case})
-    message = strip_tags(html_message)
-    send_mail(subject, message, None, [user.email], fail_silently=False, html_message=html_message)

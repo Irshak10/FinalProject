@@ -1,0 +1,23 @@
+{% extends 'base-testing.html' %}
+
+{% block title %}
+    Получаем знания...
+{% endblock %}
+
+{% block main %}
+    {% load static %}
+    {% if all_articles %}
+        {% for article in all_articles %}
+            <a href="{% url 'read_article'  article.id %}" style="text-decoration: none">
+                {% if article.header_image %}
+                    <span><img src="{{ MEDIA_URL }}{{ article.header_image }}" style="width: 100pt"></span>
+                {% endif %}
+                <span style="font-size: x-large">{{ article.title }}</span>
+        {% endfor %}
+    {% else %}
+        <div class="nothing-to-show-message">
+            <div><img src="{% static 'icons/nothing_to_show.png' %}"></div>
+        </div>
+    {% endif %}
+
+{% endblock %}

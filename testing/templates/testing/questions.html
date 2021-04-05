@@ -15,7 +15,11 @@
             <input type="hidden" value="{{ question.id }}" name="question">
 
             {% for answer in question.answer.all %}
-                <input type="{{ question.answer_type }}" name="answer" value="{{ answer.id }}">{{ answer.text }}<br>
+                <label class="answer-type-container">{{ answer.text }}
+                    <input type="{{ question.answer_type }}" name="answer" value="{{ answer.id }}">
+                    <span class="checkmark"></span>
+                </label>
+{#                <input type="{{ question.answer_type }}" name="answer" value="{{ answer.id }}">{{ answer.text }}<br>#}
             {% endfor %}
 
         {% endfor %}

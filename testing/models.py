@@ -1,9 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import timedelta, datetime
 
 
-class TestCaseCategory(models.Model):
+class Category(models.Model):
 
     class Meta:
         verbose_name = 'категория'
@@ -23,7 +22,7 @@ class TestCase(models.Model):
         verbose_name_plural = 'тесты'
         ordering = ['id']
 
-    category = models.ForeignKey(TestCaseCategory, default=1, on_delete=models.DO_NOTHING, verbose_name='категория')
+    category = models.ForeignKey(Category, default=1, on_delete=models.DO_NOTHING, verbose_name='категория')
     title = models.CharField(max_length=255, default='новый тест', verbose_name='название теста')
     description = models.CharField(max_length=255, default='без описания', verbose_name='описание')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='дата создания')
@@ -77,7 +76,7 @@ class UserTestCase(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='сотрудник')
     test_case = models.ForeignKey(TestCase, on_delete=models.CASCADE, verbose_name='тест')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='дата назначения')
-    date_expired = models.DateTimeField(default=datetime.now()+timedelta(days=3), verbose_name='пройти до')
+    date_expired = models.DateTimeField(verbose_name='пройти до', null=True)
     target_score = models.PositiveIntegerField(default=90, verbose_name='проходной балл')
     result_score = models.PositiveIntegerField(default=0, verbose_name='набранный балл', null=True, blank=True)
     complete = models.BooleanField(default=False, verbose_name='завершен')
@@ -94,18 +93,60 @@ class UserProgress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='сотрудник')
     total_number_of_tests_passed = models.PositiveIntegerField(default=0, verbose_name='количество пройденных тестов')
     total_score = models.PositiveIntegerField(default=0, verbose_name='общий балл за тесты')
+    average_score = models.FloatField(default=0, verbose_name='средний балл')
+    average_rating = models.FloatField(default=0, verbose_name='рейтинг')
 
-    # средний балл за пройденные тесты, округленный до сотых
-    def get_average_score(self):
-        average_score = round(self.total_score / self.total_number_of_tests_passed, 2)
-        return average_score
-
-    # рейтинговый балл от 0 до 5 , напр. 4.83
-    def get_average_rating(self):
-        rating = round(self.get_average_score()*0.05, 2)
-        return rating
+    # обновляем средний балл за пройденные тесты, округленный до сотых
+    def update_average_score_and_rating(self):
+        self.average_score = round(self.total_score / self.total_number_of_tests_passed, 2)
+        self.average_rating = round(self.average_score * 0.05, 2)
+        self.save()
 
     # ранг в виде звёзд от 0 до 5, напр. ****
     def get_5_star_rating(self):
-        star_rating = round(self.get_average_rating()) * '*'
+        star_rating = round(self.average_rating) * '*'
         return star_rating
+
+    # получить все назначенные пользователю курсы
+    def get_all_available_test_for_user(self):
+        tests = UserTestCase.objects.filter(user=self.user, complete=False)
+        return tests
+
+
+class Article(models.Model):
+
+    class Meta:
+        verbose_name = 'статья'
+        verbose_name_plural = 'статьи'
+
+    TYPE = (
+        ('company_news', 'новости компании'),
+        ('news', 'новости'),
+        ('library', 'база знаний')
+    )
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='категория', blank=True, null=True)
+    title = models.CharField(max_length=255, verbose_name='заголовок статьи')
+    header_image = models.ImageField(verbose_name='заглавное изображение', null=True, blank=True)
+    article_type = models.CharField(max_length=15, choices=TYPE, default='news', verbose_name='тип статьи')
+    source = models.URLField(max_length=200, verbose_name='источник', null=True, blank=True)
+    created = models.DateTimeField(auto_now=True, verbose_name='дата создания')
+
+
+class Paragraph(models.Model):
+
+    class Meta:
+        verbose_name = 'параграф'
+        verbose_name_plural = 'параграфы'
+
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='статья', related_name='paragraph')
+    text = models.TextField(verbose_name='параграф', null=True, blank=True)
+
+
+class ParagraphImage(models.Model):
+
+    class Meta:
+        verbose_name = 'изображение'
+        verbose_name_plural = 'изображения'
+
+    paragraph = models.ForeignKey(Paragraph, on_delete=models.CASCADE, verbose_name='для параграфа', related_name='image')
+    image = models.ImageField(verbose_name='изображение')

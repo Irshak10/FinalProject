@@ -1,8 +1,16 @@
 from django.contrib import admin
+from django_celery_beat.models import (
+    PeriodicTask,
+    IntervalSchedule,
+    CrontabSchedule,
+    SolarSchedule,
+    ClockedSchedule
+)
+
 from nested_admin.nested import NestedTabularInline, NestedModelAdmin
+
 from testing.models import *
-from testing.testing_logic import send_notification_email
-from users.models import Customer
+from testing.testing_logic import create_notification_email
 
 
 # ===== Дополнительные действия для админ панели =======================================================================
@@ -15,6 +23,9 @@ def set_user_test_case_complete_false(modeladmin, request, queryset):
 set_user_test_case_complete_false.short_description = "Назначить повторно"
 
 # ===== Кастомизация админ панели =====================================================================================
+# =====================================================================================================================
+
+# ===== Добавление тестов =============================================================================================
 
 
 class TestCaseAdmin(admin.ModelAdmin):
@@ -41,6 +52,12 @@ class NestedTestCaseAdmin(NestedModelAdmin, TestCaseAdmin):
     inlines = [QuestionInline, ]
 
 
+admin.site.register(TestCase, NestedTestCaseAdmin)
+admin.site.register(Category)
+
+
+# ===== Прогресс и результаты пользователя ============================================================================
+
 class UserTestCaseAdmin(admin.ModelAdmin):
     list_display = ('user', 'test_case', 'complete', 'target_score', 'result_score', 'test_case_result', 'date_expired')
     list_filter = ('complete', 'test_case_result')
@@ -49,9 +66,9 @@ class UserTestCaseAdmin(admin.ModelAdmin):
     actions = [set_user_test_case_complete_false, ]
 
     def save_model(self, request, obj, form, change):
+        super(UserTestCaseAdmin, self).save_model(request, obj, form, change)
         # при назначении теста пользоваетлю отпраявляется имейл с уведомлением
-        # send_notification_email(obj.id)
-        super().save_model(request, obj, form, change)
+        # create_notification_email(obj.id)
 
 
 class UserProgressAdmin(admin.ModelAdmin):
@@ -61,26 +78,48 @@ class UserProgressAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
-    def average_score(self, obj):
-        return obj.get_average_score()
-
-    average_score.short_description = 'Средний балл по тестам'
-
-    def average_rating(self, obj):
-        return obj.get_average_rating()
-
-    average_rating.short_description = 'Рейтинг успеваемости'
-
     def star_rating(self, obj):
         return obj.get_5_star_rating()
 
-    star_rating.short_description = 'Категория (0-5)'
+    star_rating.short_description = 'Ранг'
 
 
-admin.site.register(TestCase, NestedTestCaseAdmin)
-admin.site.register(TestCaseCategory)
-admin.site.register(UserTestCase, UserTestCaseAdmin)
 admin.site.register(UserProgress, UserProgressAdmin)
-admin.site.register(Customer)
+admin.site.register(UserTestCase, UserTestCaseAdmin)
+
+
+# ===== Добавление статей =============================================================================================
+
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ('title', 'article_type')
+    list_filter = ('article_type',)
+
+
+class ParagraphImageInline(NestedTabularInline):
+    model = ParagraphImage
+    extra = 0
+
+
+class ParagraphInline(NestedTabularInline):
+    model = Paragraph
+    extra = 1
+    inlines = [ParagraphImageInline, ]
+
+
+class NestedArticleAdmin(NestedModelAdmin, ArticleAdmin):
+    inlines = [ParagraphInline, ]
+
+
+admin.site.register(Article, NestedArticleAdmin)
+
+
+# ===== Разное ========================================================================================================
+
+# убираем django_celery_beat из админки
+admin.site.unregister(PeriodicTask)
+admin.site.unregister(IntervalSchedule)
+admin.site.unregister(CrontabSchedule)
+admin.site.unregister(SolarSchedule)
+admin.site.unregister(ClockedSchedule)
 
 admin.site.site_header = "Корпоративный портал обучения"
