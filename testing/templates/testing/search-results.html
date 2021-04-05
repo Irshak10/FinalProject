@@ -1,0 +1,12 @@
+{% extends 'base-testing.html' %}
+
+{% block title %}
+    Результаты поиска
+{% endblock %}
+
+{% block main %}
+    РЕЗУЛЬТАТЫ ПОИСКА<hr>
+    {% for result in results %}
+        <a href="{% url 'read_article' result.id %}">{{ result.title }}</a><br>
+    {% endfor %}
+{% endblock %}
