@@ -8,6 +8,9 @@
 
     <form method="post">
         {% csrf_token %}
+        {% if time_left %}
+            <div id="countdown"></div>
+        {% endif %}
         {% for question in questions.object_list %}
 
             Вопрос {{ questions.number }} из {{ questions.paginator.num_pages }}<br>
@@ -19,7 +22,6 @@
                     <input type="{{ question.answer_type }}" name="answer" value="{{ answer.id }}">
                     <span class="checkmark"></span>
                 </label>
-{#                <input type="{{ question.answer_type }}" name="answer" value="{{ answer.id }}">{{ answer.text }}<br>#}
             {% endfor %}
 
         {% endfor %}
@@ -32,5 +34,23 @@
             {% endif %}
         </div>
     </form>
+
+    <script>
+        var timeleft = {{ time_left }};
+        var downloadTimer = setInterval(function() {
+            timeleft -= 1;
+
+            var hours = Math.floor((timeleft / 3600) % 24);
+            var minutes = Math.floor((timeleft / 60) % 60);
+            var seconds = Math.floor(timeleft % 60);
+
+            document.getElementById("countdown").innerHTML = hours + "ч " + minutes + "м " + seconds + "с ";
+
+            if (timeleft <= 0) {
+                clearInterval(downloadTimer);
+                document.getElementById("countdown").innerHTML = "Время вышло"
+            }
+        }, 1000);
+    </script>
 
 {% endblock %}

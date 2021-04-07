@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
-from django.utils import timezone
+from datetime import datetime, timedelta
 from django.core.mail import send_mail
 
 from celery import shared_task
@@ -17,12 +17,26 @@ def create_test_case_pagination(page, test_case_questions):
 
 
 # получает итоговый балл за весь тест
-def test_case_result_score(answers):
+def test_case_result_score(answers, user_test_id):
+    total_number_of_questions = UserTestCase.objects.get(id=user_test_id).test_case.question.count()
     correct_answers = 0
     for question_id, answer_list in answers.items():
         correct_answers += check_answer(question_id, answer_list)
-    result_score = int(correct_answers/len(answers)*100)
+    result_score = int(correct_answers/total_number_of_questions*100)
     return result_score
+
+
+# возвращает 1 балл, если выбраны все возможные верные ответы, иначе 0
+def check_answer(question_id, answers_list):
+    number_of_correct_answers = Answer.objects.filter(question=question_id, is_right=True).count()
+    if answers_list:
+        bool_answer_list = []
+        for answer in answers_list:
+            bool_answer_list.append(Answer.objects.get(id=answer).is_right)
+        if len(bool_answer_list) == number_of_correct_answers:
+            if all(bool_answer_list):
+                return 1
+    return 0
 
 
 # обновляет результаты теста в зависимости от успешности прохождения
@@ -48,19 +62,6 @@ def update_user_progress(user_id, result_score):
     return
 
 
-# возвращает 1 балл, если выбраны все возможные верные ответы, иначе 0
-def check_answer(question_id, answers_list):
-    number_of_correct_answers = Answer.objects.filter(question=question_id, is_right=True).count()
-    if answers_list:
-        bool_answer_list = []
-        for answer in answers_list:
-            bool_answer_list.append(Answer.objects.get(id=answer).is_right)
-        if len(bool_answer_list) == number_of_correct_answers:
-            if all(bool_answer_list):
-                return 1
-    return 0
-
-
 # создает словарь для таблицы результатов, где ключ - это вопрос, а значение - верный/неверный ответ
 def get_data_for_result_table(all_answers):
     result_data = {}
@@ -81,6 +82,30 @@ def create_notification_email(user_test_case_id):
     send_notification_email_task.delay(subject, message, user.email, html_message)
 
 
+# получаем время, до которого нужно пройти тест
+def get_expire_test_time(user_test_id):
+    test = UserTestCase.objects.get(id=user_test_id)
+    total_number_of_questions = test.test_case.question.count()
+    # время на один вопрос умножаем на количество вопросов
+    total_time = test.time_for_one_question * total_number_of_questions
+    expire_time = datetime.now().replace(microsecond=0) + timedelta(seconds=total_time)
+    return str(expire_time)
+
+
+# возвращает оставшееся время в секундах
+def calculate_test_time_left(expire_time):
+    if expire_time:
+        # конвертируем строку в datetime обьект
+        expire_time_obj = datetime.strptime(expire_time, '%Y-%m-%d %H:%M:%S')
+        if expire_time_obj > datetime.now().replace(microsecond=0):
+            time_left = expire_time_obj - datetime.now().replace(microsecond=0)
+            return time_left.seconds
+        else:
+            return False
+    else:
+        return
+
+
 # отправлет email пользователю
 @shared_task()
 def send_notification_email_task(subject, message, email, html_message):
@@ -89,10 +114,10 @@ def send_notification_email_task(subject, message, email, html_message):
 
 # если тест не пройден до указанной даты, он засчитывается как "просроченный" с 0 баллов
 @shared_task()
-def check_test_case_expired_date():
+def check_expired_test_date():
     test_cases = UserTestCase.objects.filter(complete=False)
     for test_case in test_cases:
-        if test_case.date_expired <= timezone.now() and not test_case.complete:
+        if test_case.date_expired <= datetime.now() and not test_case.complete:
             # обновляем статус теста
             test_case.complete = True
             test_case.result_score = 0
