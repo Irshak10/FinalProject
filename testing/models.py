@@ -77,13 +77,13 @@ class UserTestCase(models.Model):
     test_case = models.ForeignKey(TestCase, on_delete=models.CASCADE, verbose_name='тест')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='дата назначения')
     date_expired = models.DateTimeField(verbose_name='пройти до', null=True)
+    time_for_one_question = models.PositiveIntegerField(verbose_name='среднее время на вопрос (сек.)', null=True, blank=True)
     target_score = models.PositiveIntegerField(default=90, verbose_name='проходной балл')
     result_score = models.PositiveIntegerField(default=0, verbose_name='набранный балл', null=True, blank=True)
     complete = models.BooleanField(default=False, verbose_name='завершен')
     test_case_result = models.CharField(max_length=20, verbose_name='итоговый результат', null=True, blank=True)
 
 
-# как вариант, перенести это в приложение юзера
 class UserProgress(models.Model):
 
     class Meta:
