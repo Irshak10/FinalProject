@@ -23,8 +23,11 @@ def test_case(request, user_test_id, test_id):
     test_available = UserTestCase.objects.filter(complete=False, test_case=test_id, user=request.user)
     if test_available:
         if request.POST and request.POST.get('start_test'):
+            if UserTestCase.objects.get(id=user_test_id).time_for_one_question:
+                if f'expire_time_{user_test_id}' not in request.session:
+                    request.session[f'expire_time_{user_test_id}'] = get_expire_test_time(user_test_id)
             # создаем сессию для хранения пар вопрос/ответы
-            request.session['all_answers'] = {}
+            request.session[f'all_answers_{user_test_id}'] = {}
             return redirect(reverse('test_case_questions', args=(user_test_id, test_id)))
         context = {'test_case': TestCase.objects.get(id=test_id)}
         return render(request, 'testing/test-case.html', context=context)
@@ -34,15 +37,19 @@ def test_case(request, user_test_id, test_id):
 
 @login_required(login_url='login')
 def questions(request, user_test_id, test_id):
+    expire_time = request.session.get(f'expire_time_{user_test_id}')
+    time_left = calculate_test_time_left(expire_time)
+    if expire_time and not time_left:
+        return redirect(reverse('test_case_results', args=(user_test_id,)))
     test_questions = Question.objects.filter(test_case_id=test_id)
     page_context = create_test_case_pagination(request, test_questions)
-    answers_session = request.session.get('all_answers')
+    answers_session = request.session.get(f'all_answers_{user_test_id}')
     if request.POST:
         try:
             question_id = request.POST.get('question')
             answers_list = request.POST.getlist('answer')
             answers_session[str(question_id)] = answers_list
-            request.session['all_answers'] = answers_session
+            request.session[f'all_answers_{user_test_id}'] = answers_session
             if request.POST.get('complete'):
                 return redirect(reverse('test_case_results', args=(user_test_id,)))
             else:
@@ -50,20 +57,22 @@ def questions(request, user_test_id, test_id):
                 page_context = create_test_case_pagination(page, test_questions)
         except TypeError:
             return redirect(reverse('user_test_cases'))
-    context = {'questions': page_context, 'test_case': test_id}
+    context = {'questions': page_context, 'test_case': test_id, 'time_left': time_left}
     return render(request, 'testing/questions.html', context=context)
 
 
 @login_required(login_url='login')
 def results(request, user_test_id):
     try:
-        all_answers = request.session['all_answers']
-        result_score = test_case_result_score(all_answers)
+        all_answers = request.session[f'all_answers_{user_test_id}']
+        result_score = test_case_result_score(all_answers, user_test_id)
         update_test_results(request.user, user_test_id, result_score)
         result_status = UserTestCase.objects.get(id=user_test_id, user=request.user).test_case_result
         result_table = get_data_for_result_table(all_answers)
-        if 'all_answers' in request.session:
-            del request.session['all_answers']
+        if f'all_answers_{user_test_id}' in request.session:
+            del request.session[f'all_answers_{user_test_id}']
+        if f'expire_time_{user_test_id}' in request.session:
+            del request.session[f'expire_time_{user_test_id}']
     except KeyError:
         return redirect(reverse('user_test_cases'))
     context = {'result_score': result_score, 'result_table_data': result_table, 'status': result_status}
@@ -94,7 +103,7 @@ def search(request):
     if request.method == 'GET':
         search_get = request.GET.get('search')
         search_results = Article.objects.annotate(
-            search=SearchVector('title', 'paragraph__text', 'category__name'),
+            search=SearchVector('title', 'category__name'),
         ).filter(search=search_get)
         context = {'results': search_results}
         return render(request, 'testing/search-results.html', context=context)

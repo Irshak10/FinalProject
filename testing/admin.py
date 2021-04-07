@@ -13,15 +13,6 @@ from testing.models import *
 from testing.testing_logic import create_notification_email
 
 
-# ===== Дополнительные действия для админ панели =======================================================================
-
-# повторно назначть тест
-def set_user_test_case_complete_false(modeladmin, request, queryset):
-    queryset.update(complete=False)
-
-
-set_user_test_case_complete_false.short_description = "Назначить повторно"
-
 # ===== Кастомизация админ панели =====================================================================================
 # =====================================================================================================================
 
@@ -63,7 +54,7 @@ class UserTestCaseAdmin(admin.ModelAdmin):
     list_filter = ('complete', 'test_case_result')
     list_display_links = ('test_case',)
     empty_value_display = ''
-    actions = [set_user_test_case_complete_false, ]
+    exclude = ('complete', 'test_case_result', 'result_score')
 
     def save_model(self, request, obj, form, change):
         super(UserTestCaseAdmin, self).save_model(request, obj, form, change)
