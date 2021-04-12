@@ -24,7 +24,7 @@ class TestCase(models.Model):
 
     category = models.ForeignKey(Category, default=1, on_delete=models.DO_NOTHING, verbose_name='категория')
     title = models.CharField(max_length=255, default='новый тест', verbose_name='название теста')
-    description = models.CharField(max_length=255, default='без описания', verbose_name='описание')
+    description = models.CharField(max_length=255, default='', verbose_name='описание')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='дата создания')
 
     def __str__(self):

@@ -8,7 +8,7 @@ from testing.testing_logic import *
 
 @login_required(login_url='login')
 def index(request):
-    context = {'last_articles': Article.objects.all()[:5]}
+    context = {'last_articles': Article.objects.filter(article_type__contains='news').order_by('-id')[:5]}
     return render(request, 'testing/index.html', context=context)
 
 
@@ -26,10 +26,10 @@ def test_case(request, user_test_id, test_id):
             if UserTestCase.objects.get(id=user_test_id).time_for_one_question:
                 if f'expire_time_{user_test_id}' not in request.session:
                     request.session[f'expire_time_{user_test_id}'] = get_expire_test_time(user_test_id)
-            # создаем сессию для хранения пар вопрос/ответы
+            # создаем ключ в сессии для хранения пар вопрос/ответы
             request.session[f'all_answers_{user_test_id}'] = {}
             return redirect(reverse('test_case_questions', args=(user_test_id, test_id)))
-        context = {'test_case': TestCase.objects.get(id=test_id)}
+        context = {'user_test_case': UserTestCase.objects.get(id=user_test_id)}
         return render(request, 'testing/test-case.html', context=context)
     else:
         return redirect(reverse('user_test_cases'))
@@ -81,7 +81,7 @@ def results(request, user_test_id):
 
 @login_required(login_url='login')
 def all_news(request):
-    context = {'all_articles': Article.objects.filter(article_type__contains='news')}
+    context = {'all_articles': Article.objects.filter(article_type__contains='news').order_by('-id')}
     return render(request, 'testing/all-articles.html', context=context)
 
 

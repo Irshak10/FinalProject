@@ -1,419 +1,590 @@
-/*body {*/
-/*    background-color: #bbdeff;*/
-/*}*/
-
-/* Header ========================================================================================================== */
-
-.menu {
-    overflow: hidden;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background: #dedede;
-    border: 5px outset lightskyblue;
-    background-image: linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
-    background-image: -webkit-linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
-    background-image: -moz-linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
-}
-
-.content {
-    list-style: none;
-    margin: 0;
+* {
     padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
-.content:after {
-    content: "";
-    display: table;
-    clear: both;
+body {
+    background: linear-gradient(to right top, #fcf8a5, #60ddfc);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
-.left-item {float: left;}
+#glass {
+    background: linear-gradient(to right top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1));
+    border-radius: 20px;
+    box-shadow: 10px 5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    backdrop-filter: blur(7px);
+}
 
-.right-item {
+.circle1, .circle2 {
+    background: linear-gradient(to right bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.3));
+    box-shadow: 10px 5px 15px rgba(0, 0, 0, 0.1);
+    height: 300px;
+    width: 300px;
+    position: absolute;
+    z-index: 1;
+    border-radius: 50%;
+}
+
+.circle1 {
+    top: 5%;
+    right: 10%;
+}
+
+.circle2 {
+    bottom: 5%;
+    left: 10%;
+}
+
+.navbar {
+    width: 1000pt;
+    height: 65pt;
+    margin-top: 15pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-content {
+    height: 80%;
+    width: 97%;
+    border-radius: 15px;
+    overflow: hidden;
     position: relative;
-    float: right;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.notification {
-  position: relative;
-  display: inline-block;
-}
-
-.notification .badge {
-  top: -10px;
-  right: -10px;
-  padding: 5px 10px;
-  border-radius: 50%;
-  background: red;
-  color: white;
-}
-
-.content a {
-    text-decoration: none;
-    display: block;
-    line-height: 60px;
-    padding: 0 20px;
-    font-size: 18px;
-    letter-spacing: 2px;
-    font-family: 'Arimo', sans-serif;
+.nav-item {
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
     font-weight: bold;
-    color: #333;
-    transition: .3s linear;
+    color: rgba(0, 0, 0, 0.5);
 }
 
-.content a:hover {
-    background: lightskyblue;
-    background-image: -webkit-linear-gradient(rgba(189, 204, 211, 0.5) 50%, transparent 50%, transparent);
-    background-image: -moz-linear-gradient(rgba(189, 204, 211, 0.5) 50%, transparent 50%, transparent);
-    background-image: linear-gradient(rgba(189, 204, 211, 0.5) 50%, transparent 50%, transparent);
+.search {
+    width: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
 }
 
-@media (max-width: 830px) {
-.content {
-    padding-top: 90px;
+#nav-link {
+    height: 100%;
     text-align: center;
 }
 
-.content li {
-    float: none;
-    display: inline-block;
-}
-.content a {
-    line-height: normal;
-    padding: 20px 15px;
-    font-size: 16px;
-}
-}
-@media (max-width: 630px) {
-.content li {display: block;}
+#logo {
+    width: 20%;
 }
 
-/* Main ============================================================================================================ */
+.search form {
+    width: 100%;
+}
+
+.search form input[type=search] {
+    background: none;
+    border: 2px rgba(255, 255, 255, 0.6) solid;
+    font-size: 20px;;
+    text-align: left;
+    padding: 10px 10px;
+}
+
+.search form input[type=search]:focus-within {
+    background: linear-gradient(to right top, rgba(255, 255, 255, 0.5), rgba(252, 248, 165, 0.5));
+}
+
+.nav-item a {
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-item a:hover {
+    font-size: 30px;
+    background: -webkit-linear-gradient(#373737, #4cff24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-item a img {
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
+.nav-item a img:hover {
+    width: 120%;
+}
 
 .main {
-    margin-top: 70pt;
-    margin-bottom: 80pt;
+    width: 1000pt;
+    height: 560pt;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Tables */
-
-#content-table-1 {
-    margin-left: auto;
-    margin-right: auto;
-    border-collapse: collapse;
-    width: 65%;
+.main-content {
+    height: 95%;
+    width: 97%;
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-#content-table-1 td, #content-table-1 th {
-    font-size: x-large;
-    border: 1px solid #333;
-    padding: 8px;
-    transition: .3s linear;
-}
+/*#myBtn {*/
+/*    display: block; !* Hidden by default *!*/
+/*    position: fixed; !* Fixed/sticky position *!*/
+/*    bottom: 30px; !* Place the button at the bottom of the page *!*/
+/*    right: 50px; !* Place the button 30px from the right *!*/
+/*    z-index: 99; !* Make sure it does not overlap *!*/
+/*    border: none; !* Remove borders *!*/
+/*    outline: none; !* Remove outline *!*/
+/*    background-color: rgb(76, 176, 243); !* Set a background color *!*/
+/*    color: white; !* Text color *!*/
+/*    cursor: pointer; !* Add a mouse pointer on hover *!*/
+/*    padding: 15px; !* Some padding *!*/
+/*    border-radius: 15px; !* Rounded corners *!*/
+/*    font-size: 18px; !* Increase font size *!*/
+/*}*/
 
-#content-table-1 tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-#content-table-1 tr:hover {
-  background-color: #bbdeff;
-}
-
-#content-table-1 th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background: #dedede;
-    color: #333;
-    background-image: linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
-    background-image: -webkit-linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
-    background-image: -moz-linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
-}
-
-#content-table-1 a {
-  text-decoration: none;
-
-}
-
-/* Footer ========================================================================================================== */
+/*#myBtn:hover {*/
+/*    background-color: #3978e5; !* Add background on hover *!*/
+/*}*/
 
 .footer {
-    overflow: hidden;
-    margin: 0;
-    position: fixed;
-    bottom: 0;
-    color: #333;
-    width: 100%;
-    height: 30pt;
-    background: #dedede;
-    border: 1px solid #333;
-    background-image: linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
-    background-image: -webkit-linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
-    background-image: -moz-linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
+    margin-top: 20px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: left;
 }
 
 .footer a {
-    text-decoration: none;
-    color: #333333;
-}
-
-/* Dropdown menu =================================================================================================== */
-
-/* Dropdown Button */
-.dropbtn {
-    background-color: #dedede;
-    color: #333;
-    padding: 16px;
-    font-size: 16px;
-    border: none;
-    background-image: linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
-    background-image: -webkit-linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
-    background-image: -moz-linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
-}
-
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
     position: relative;
-    display: inline-block;
+    top: 0;
 }
 
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    z-index: 1;
+.footer a img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
 }
 
-/* Links inside the dropdown */
-.dropdown-content a {
-    font-size: medium;
-    color: black;
-    padding: 2px 6px;
-    text-decoration: none;
-    display: block;
-}
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: lightskyblue;}
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {display: block;}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: lightskyblue;}
-
-/* Two column layout =============================================================================================== */
-
-.column {
-    float: left;
-    padding: 3px;
-}
-
-.left {
-    width: 40%;
-}
-
-.right {
-    width: 59%;
-}
-
-/* Clear floats after the columns */
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-/* Responsive layout - when the screen is less than 600px wide,
-make the two columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
-    .column {
-        width: 100%;
-    }
-}
-
-.submit-btn-1 {
+.slideshow-container {
     width: 100%;
-    border: 1px solid #333;
-    background-color: #dedede;
-    color: #333;
+    height: 100%;
+    position: relative;
+    margin: auto;
+}
+
+/* Hide the images by default */
+.mySlides {
+    display: none;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-top: -22px;
     padding: 16px;
-    font-size: 16px;
-    background-image: linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
-    background-image: -webkit-linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
-    background-image: -moz-linear-gradient(rgba(189, 204, 211, .50) 50%, transparent 50%, transparent);
+    color: rgb(76, 176, 243);
+    font-weight: bold;
+    font-size: 25px;
+    transition: 0.6s ease;
+    background-color: white;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
 }
 
-.submit-btn-1:hover {
-    background-color: lightskyblue;
+/* Position the "next button" to the right */
+.next {
+    right: 0;
+    margin-right: 20px;
 }
 
-/* Buttons ============================================================================================== */
-
-/* Back on top */
-#myBtn {
-  display: none; /* Hidden by default */
-  position: fixed; /* Fixed/sticky position */
-  bottom: 80px; /* Place the button at the bottom of the page */
-  right: 30px; /* Place the button 30px from the right */
-  z-index: 99; /* Make sure it does not overlap */
-  border: none; /* Remove borders */
-  outline: none; /* Remove outline */
-  background-color: red; /* Set a background color */
-  color: white; /* Text color */
-  cursor: pointer; /* Add a mouse pointer on hover */
-  padding: 15px; /* Some padding */
-  border-radius: 10px; /* Rounded corners */
-  font-size: 18px; /* Increase font size */
+.prev {
+    margin-left: 20px;
 }
 
-#myBtn:hover {
-  background-color: #555; /* Add a dark-grey background on hover */
+.prev:hover, .next:hover {
+    color: #3978e5;
 }
 
-/* Custom checkbox and radio button ================================================================================ */
+/* Caption text */
+.text {
+    font-size: 45px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 22px 16px;
+    color: #333333;
+    background: linear-gradient(to right top, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.3));
+    box-shadow: 10px 5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    backdrop-filter: blur(7px);
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+    color: #f2f2f2;
+    font-size: 20px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+}
+
+/* Fading animation */
+.fade {
+    -webkit-animation-name: fade;
+    -webkit-animation-duration: 1.5s;
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+
+@-webkit-keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
+}
+
+@keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
+}
+
+.content-container {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.content-container a {
+    text-decoration: none;
+    font-size: 35px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.content-container a:hover {
+    font-size: 40px;
+    text-justify: auto;
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.content-container #no-content {
+    position: absolute;
+    bottom: 0;
+}
+
+.content {
+    height: 130pt;
+    width: 100%;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(250, 255, 255, 0.8));
+    border-radius: 20px;
+    box-shadow: 10px 5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 3;
+    backdrop-filter: blur(1px);
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.content:hover {
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(250, 255, 255, 0.1));
+    box-shadow: 10px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.content img {
+    height: 130pt;
+    width: 230pt;
+    float: left;
+    margin-right: 10px;
+}
+
+.article {
+    width: 70%;
+    margin: auto;
+}
+
+.article a {
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.article a:hover {
+    font-size: 20px;
+    background: -webkit-linear-gradient(#373737, #4cff24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.article h1 {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.article img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    padding-top: 10px;
+}
+
+.paragraph {
+    font-size: 25px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.table-content {
+    width: 100%;
+    height: auto;
+    margin: auto;
+    overflow-y: auto;
+    border-collapse: collapse;
+}
+
+#head-table {
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.3));
+    z-index: 3;
+    backdrop-filter: blur(7px);
+    font-size: 25px;
+}
+
+.table-content td {
+    font-size: x-large;
+    padding-left: 20px;
+    padding-top: 20px;
+    margin: auto;
+}
+
+#rows {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+#rows:hover {
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(250, 255, 255, 0.1));
+    box-shadow: 10px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#rows a {
+    font-size: 25px;
+}
+
+#rows td {
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 5px 10px;
+}
+
+.test-frame {
+    padding: 20px;
+    width: 75%;
+    height: 75%;
+    display: flex;
+    justify-content: left;
+    position: relative;
+    left: 0;
+    text-align: center;
+    overflow-y: auto;
+}
+
+.test-frame h1 {
+    font-size: 35px;
+    background: -webkit-linear-gradient(#343434, #5d5d5d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.test-frame p {
+    padding-top: 20px;
+    padding-left: 20px;
+    font-size: 35px;
+    text-align: left;
+}
+
+#test-info {
+    font-size: 25px;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+
+.test-frame input[type=submit] {
+    padding: 15px 30px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: 30px;
+    margin-bottom: 30px;
+    border: none;
+    border-radius: 20px;
+    font-size: 30px;
+    font-weight: bolder;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.test-frame input[type=submit]:hover {
+    font-size: 35px;
+    color: #35a925;
+    cursor: pointer;
+}
+
+#countdown {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-left: 30px;
+    margin-bottom: 30px;
+    padding: 15px 30px;
+    font-size: 30px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.5);
+    background: linear-gradient(to right top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1));
+    border-radius: 20px;
+    box-shadow: 10px 5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 3;
+    backdrop-filter: blur(7px);
+    text-align: center;
+}
+
+.question {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 70px;
+}
 
 /* Customize the label (the container) */
-.answer-type-container {
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+.answer-container {
+    display: block;
+    position: relative;
+    text-align: left;
+    padding-left: 35px;
+    margin-top: 20px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 25px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 /* Hide the browser's default checkbox */
-.answer-type-container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
+.answer-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
 }
 
 /* Create a custom checkbox */
 .checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 25px;
-  width: 25px;
-  background-color: #eee;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
 }
 
 /* On mouse-over, add a grey background color */
-.answer-type-container:hover input ~ .checkmark {
-  background-color: #ccc;
+.answer-container:hover input ~ .checkmark {
+    background-color: #ccc;
 }
 
 /* When the checkbox is checked, add a blue background */
-.answer-type-container input:checked ~ .checkmark {
-  background-color: #2196F3;
+.answer-container input:checked ~ .checkmark {
+    background-color: #2196F3;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
+    content: "";
+    position: absolute;
+    display: none;
 }
 
 /* Show the checkmark when checked */
-.answer-type-container input:checked ~ .checkmark:after {
-  display: block;
+.answer-container input:checked ~ .checkmark:after {
+    display: block;
 }
 
 /* Style the checkmark/indicator */
-.answer-type-container .checkmark:after {
-  left: 9px;
-  top: 5px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
+.answer-container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 
-/* The container must be positioned relative: */
-#custom-select {
-  position: relative;
-  font-family: Arial;
+/* Create a custom radio button */
+.radiomark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 50%;
 }
 
-#custom-select select {
-  display: none; /*hide original SELECT element: */
+/* On mouse-over, add a grey background color */
+.answer-container:hover input ~ .radiomark {
+    background-color: #ccc;
 }
 
-.select-selected {
-  background-color: DodgerBlue;
+/* When the radio button is checked, add a blue background */
+.answer-container input:checked ~ .radiomark {
+    background-color: #2196F3;
 }
 
-/* Style the arrow inside the select element: */
-.select-selected:after {
-  position: absolute;
-  content: "";
-  top: 14px;
-  right: 10px;
-  width: 0;
-  height: 0;
-  border: 6px solid;
-  border-color: #fff transparent transparent transparent;
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.radiomark:after {
+    content: "";
+    position: absolute;
+    display: none;
 }
 
-/* Point the arrow upwards when the select box is open (active): */
-.select-selected.select-arrow-active:after {
-  border-color: transparent transparent #fff transparent;
-  top: 7px;
+/* Show the indicator (dot/circle) when checked */
+.answer-container input:checked ~ .radiomark:after {
+    display: block;
 }
 
-/* style the items (options), including the selected item: */
-.select-items div,.select-selected {
-  color: #ffffff;
-  padding: 8px 16px;
-  border: 1px solid;
-  border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
-  cursor: pointer;
+/* Style the indicator (dot/circle) */
+.answer-container .radiomark:after {
+    top: 9px;
+    left: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
 }
 
-/* Style items (options): */
-.select-items {
-  position: absolute;
-  background-color: DodgerBlue;
-  top: 100%;
-  left: 0;
-  right: 0;
-  z-index: 99;
-}
-
-/* Hide the items when the select box is closed: */
-.select-hide {
-  display: none;
-}
-
-.select-items div:hover, .same-as-selected {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-/* Images customization ============================================================================================ */
-
-.nothing-to-show-message {
-    position: relative;
-    margin: auto;
-    width: 65%;
-}
-
-.nothing-to-show-message img {
-    width: 800pt;
-}

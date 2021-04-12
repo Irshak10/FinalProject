@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator
 from django.utils.html import strip_tags
+from django.utils import timezone
 from django.template.loader import render_to_string
 from datetime import datetime, timedelta
 from django.core.mail import send_mail
@@ -76,10 +77,11 @@ def get_data_for_result_table(all_answers):
 def create_notification_email(user_test_case_id):
     user_test_case = UserTestCase.objects.get(id=user_test_case_id)
     user = user_test_case.user
-    subject = 'New test case available'
-    html_message = render_to_string('testing/notification-about-test-case.html', {'user': user, 'test': user_test_case})
-    message = strip_tags(html_message)
-    send_notification_email_task.delay(subject, message, user.email, html_message)
+    if user.email:
+        subject = 'New test case available'
+        html_message = render_to_string('testing/notification-about-test-case.html', {'user': user, 'test': user_test_case})
+        message = strip_tags(html_message)
+        send_notification_email_task.delay(subject, message, user.email, html_message)
 
 
 # получаем время, до которого нужно пройти тест
@@ -117,7 +119,7 @@ def send_notification_email_task(subject, message, email, html_message):
 def check_expired_test_date():
     test_cases = UserTestCase.objects.filter(complete=False)
     for test_case in test_cases:
-        if test_case.date_expired <= datetime.now() and not test_case.complete:
+        if test_case.date_expired <= timezone.now() and not test_case.complete:
             # обновляем статус теста
             test_case.complete = True
             test_case.result_score = 0
