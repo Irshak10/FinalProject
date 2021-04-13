@@ -28,7 +28,7 @@ def registration_page(request):
 
             messages.success(request, 'Account was created for ' + username)
 
-            return redirect('login')
+            return redirect('index')
 
     context = {'form': form}
     return render(request, 'users/register.html', context)
@@ -44,7 +44,7 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            return redirect('user')
+            return redirect('index')
         else:
             messages.info(request, 'Username or password is incorrect')
 
