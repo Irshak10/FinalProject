@@ -58,7 +58,7 @@ def logout_page(request):
 
 
 @login_required(login_url='login')
-@allower_users(allowed_roles=['customer', 'admin'])
+@allower_users(allowed_roles=['customer'])
 def user_page(request):
     customer = request.user.customer
     form = CustomerForm(instance=customer)
@@ -69,4 +69,4 @@ def user_page(request):
             form.save()
 
     context = {'form': form}
-    return render(request, 'users/user.html', context)
+    return render(request, 'testing/all-articles.html', context)
