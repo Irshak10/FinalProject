@@ -14,7 +14,7 @@
                         {% if article.header_image %}
                             <img src="{{ MEDIA_URL }}{{ article.header_image }}" alt="header image">
                         {% else %}
-                            <img src="{% static 'icons/nothing_to_show.png' %}" alt="no image">
+                            <img src="{% static 'icons/new_info.jpg' %}" alt="no image">
                         {% endif %}
                         <p>{{ article.title }}</p>
                     </div>
@@ -24,4 +24,16 @@
             <img src="{% static 'icons/no_content_1.gif' %}" id="no-content" alt="no image">
         {% endif %}
     </div>
+{#    <button type="button" class="btn">Нажми на меня</button>#}
+{##}
+{#    <script>#}
+{#        let hiddenElement = document.getElementById("content-container");#}
+{#        let btn = document.querySelector('.btn');#}
+{##}
+{#        function handleButtonClick() {#}
+{#            hiddenElement.scrollIntoView({block: "center", behavior: "smooth"});#}
+{#        }#}
+{##}
+{#        btn.addEventListener('click', handleButtonClick);#}
+{#    </script>#}
 {% endblock %}

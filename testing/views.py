@@ -107,3 +107,9 @@ def search(request):
         ).filter(search=search_get)
         context = {'results': search_results}
         return render(request, 'testing/search-results.html', context=context)
+
+
+@login_required(login_url='login')
+def user_page(request):
+    context = {'user_info': UserProgress.objects.get(user=request.user)}
+    return render(request, 'testing/user-page.html', context=context)

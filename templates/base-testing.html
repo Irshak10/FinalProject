@@ -34,11 +34,13 @@
                     Мои курсы
                     {% number_of_tests request user.id as tests %}
                     {% if tests %}
-                        ({% number_of_tests request user.id %})
+                        ({{ tests }})
                     {% endif %}
                 </a>
             </span>
-            <span class="nav-item" id="nav-link">Личный кабинет</span>
+            <span class="nav-item" id="nav-link">
+                <a href="{% url 'user' %}">Личный кабинет</a>
+            </span>
             <span class="nav-item" id="nav-link">
                 <a href="{% url 'logout' %}">Выход {{ user.username }}</a>
             </span>

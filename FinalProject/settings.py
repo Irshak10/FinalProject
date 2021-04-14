@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 ]
-
+# SITE_ID = 3 for heroku
 SITE_ID = 2
 
 MIDDLEWARE = [

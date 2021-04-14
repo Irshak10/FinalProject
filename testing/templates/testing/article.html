@@ -19,6 +19,9 @@
                 {% for image in paragraph.image.all %}
                     <img src="{{ MEDIA_URL }}{{ image.image }}" alt="image">
                 {% endfor %}
+                {% for video in paragraph.youtube_video.all %}
+                    <iframe width="560" height="315" src="{{ video.source}}" frameborder="0" allowfullscreen></iframe>
+                {% endfor %}
             {% endfor %}
             {% if article.source %}
                 <a href="{{ article.source }}">Источник</a>

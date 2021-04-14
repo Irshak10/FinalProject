@@ -150,3 +150,13 @@ class ParagraphImage(models.Model):
 
     paragraph = models.ForeignKey(Paragraph, on_delete=models.CASCADE, verbose_name='для параграфа', related_name='image')
     image = models.ImageField(verbose_name='изображение')
+
+
+class ParagraphYoutubeVideo(models.Model):
+
+    class Meta:
+        verbose_name = 'видео с Youtube'
+        verbose_name_plural = 'видео с Youtube'
+
+    paragraph = models.ForeignKey(Paragraph, on_delete=models.CASCADE, verbose_name='для параграфа', related_name='youtube_video')
+    source = models.CharField(max_length=255, verbose_name='ссылка на видео', null=True)

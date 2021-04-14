@@ -63,16 +63,12 @@ class UserTestCaseAdmin(admin.ModelAdmin):
 
 
 class UserProgressAdmin(admin.ModelAdmin):
-    list_display = ('user', 'total_number_of_tests_passed', 'average_score', 'average_rating', 'star_rating')
+    list_display = ('user', 'total_number_of_tests_passed', 'average_score', 'average_rating')
+    ordering = ('average_rating',)
 
     # убираем возможность "добавить" статистику пользоваетеля
     def has_add_permission(self, request):
         return False
-
-    def star_rating(self, obj):
-        return obj.get_5_star_rating()
-
-    star_rating.short_description = 'Ранг'
 
 
 admin.site.register(UserProgress, UserProgressAdmin)
@@ -91,10 +87,15 @@ class ParagraphImageInline(NestedTabularInline):
     extra = 0
 
 
+class ParagraphYoutubeVideoInline(NestedTabularInline):
+    model = ParagraphYoutubeVideo
+    extra = 0
+
+
 class ParagraphInline(NestedTabularInline):
     model = Paragraph
     extra = 1
-    inlines = [ParagraphImageInline, ]
+    inlines = [ParagraphImageInline, ParagraphYoutubeVideoInline]
 
 
 class NestedArticleAdmin(NestedModelAdmin, ArticleAdmin):
