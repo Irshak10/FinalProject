@@ -96,18 +96,26 @@ class UserProgress(models.Model):
     average_score = models.FloatField(default=0, verbose_name='средний балл')
     average_rating = models.FloatField(default=0, verbose_name='рейтинг')
 
-    # обновляем средний балл за пройденные тесты, округленный до сотых
     def update_average_score_and_rating(self):
+        """
+        Get new values for average score and average rating.
+
+        All values are rounding to 2 digits. Example: 4,5623 --> 4.56
+        Average rating is from 0 to 5.
+        """
         self.average_score = round(self.total_score / self.total_number_of_tests_passed, 2)
         self.average_rating = round(self.average_score * 0.05, 2)
         self.save()
 
-    # ранг в виде звёзд от 0 до 5, напр. ****
     def get_5_star_rating(self):
+        """
+        Simple start rating based on average_rating.
+
+        Example: average_rating 4,35 == **** (4 stars).
+        """
         star_rating = round(self.average_rating) * '*'
         return star_rating
 
-    # получить все назначенные пользователю курсы
     def get_all_available_test_for_user(self):
         tests = UserTestCase.objects.filter(user=self.user, complete=False)
         return tests

@@ -10,15 +10,29 @@ from celery import shared_task
 from testing.models import *
 
 
-# возвращает станицу с учётом пагинации
 def create_test_case_pagination(page, test_case_questions):
+    """
+    Create page context with 1 question.
+
+    @param page: number of current page --> int
+    @param test_case_questions: list of all questions for current test
+    @return: question for current page
+    """
     test_case_paginator = Paginator(test_case_questions, 1)
     page_context = test_case_paginator.get_page(page)
     return page_context
 
 
-# получает итоговый балл за весь тест
 def test_case_result_score(answers, user_test_id):
+    """
+    Calculate result score for test.
+
+    Check every user's answer (check_answer), calculate number of correct answers.
+
+    @param answers: dict of pairs question_id and list of answers.
+    @param user_test_id: UserTestCase object id --> int
+    @return: result score from 0 to 100.
+    """
     total_number_of_questions = UserTestCase.objects.get(id=user_test_id).test_case.question.count()
     correct_answers = 0
     for question_id, answer_list in answers.items():
@@ -27,8 +41,17 @@ def test_case_result_score(answers, user_test_id):
     return result_score
 
 
-# возвращает 1 балл, если выбраны все возможные верные ответы, иначе 0
 def check_answer(question_id, answers_list):
+    """
+    Check answers for question.
+
+    Convert answers to boolean values for comparing with correct answers.
+    Answer wil get point if correct, not empty and all correct choices was chosen.
+
+    @param question_id: Question object id --> int
+    @param answers_list: list of answers for current question.
+    @return: 1 point if answer is correct, else 0.
+    """
     number_of_correct_answers = Answer.objects.filter(question=question_id, is_right=True).count()
     if answers_list:
         bool_answer_list = []
@@ -40,8 +63,17 @@ def check_answer(question_id, answers_list):
     return 0
 
 
-# обновляет результаты теста в зависимости от успешности прохождения
 def update_test_results(user, user_test_id, result_score):
+    """
+    Save test results and update user's progress.
+
+    Test result depends on result score and its comparison to target score.
+    Call function to save user progress (update_user_progress).
+
+    @param user: current user
+    @param user_test_id: UserTestCase object id --> int
+    @param result_score: points for all answers --> int
+    """
     user_test = UserTestCase.objects.get(id=user_test_id, user=user)
     user_test.complete = True
     user_test.result_score = result_score
@@ -54,8 +86,13 @@ def update_test_results(user, user_test_id, result_score):
     return
 
 
-# обновляет прогресс пользователя по пройденным тестам
 def update_user_progress(user_id, result_score):
+    """
+    If not exist, create progress object for current user and update with test results.
+
+    @param user_id: User objects id --> int
+    @param result_score: result score for test --> int
+    """
     user_progress, created = UserProgress.objects.get_or_create(user_id=user_id)
     user_progress.total_number_of_tests_passed += 1
     user_progress.total_score += result_score
@@ -63,8 +100,13 @@ def update_user_progress(user_id, result_score):
     return
 
 
-# создает словарь для таблицы результатов, где ключ - это вопрос, а значение - верный/неверный ответ
 def get_data_for_result_table(all_answers):
+    """
+    Generate simple data for result table (question, answer status true/false).
+
+    @param all_answers: dict with pairs question_id and list of answers for question.
+    @return: dict with all data for result table.
+    """
     result_data = {}
     for question_id, answers_list in all_answers.items():
         question_text = Question.objects.get(id=question_id).text
@@ -73,8 +115,12 @@ def get_data_for_result_table(all_answers):
     return result_data
 
 
-# создание необходимых аргументов для последующей отправки через email
 def create_notification_email(user_test_case_id):
+    """
+    Gather all necessary data for send email function. If user has email in database - send email to him.
+
+    @param user_test_case_id: UserTestCase objects id --> int
+    """
     user_test_case = UserTestCase.objects.get(id=user_test_case_id)
     user = user_test_case.user
     if user.email:
@@ -84,20 +130,35 @@ def create_notification_email(user_test_case_id):
         send_notification_email_task.delay(subject, message, user.email, html_message)
 
 
-# получаем время, до которого нужно пройти тест
 def get_expire_test_time(user_test_id):
+    """
+    Get time when test will expire.
+
+    Multiply time for one question with total number of questions to get total time for test in seconds.
+    Add this time to current time to get expire time. Convert to string to store in request.session.
+
+    @param user_test_id: UserTestCase objects id --> int
+    @return: date when test will expire --> str
+    """
     test = UserTestCase.objects.get(id=user_test_id)
     total_number_of_questions = test.test_case.question.count()
-    # время на один вопрос умножаем на количество вопросов
     total_time = test.time_for_one_question * total_number_of_questions
     expire_time = datetime.now().replace(microsecond=0) + timedelta(seconds=total_time)
     return str(expire_time)
 
 
-# возвращает оставшееся время в секундах
 def calculate_test_time_left(expire_time):
+    """
+    Calculate time left for test in seconds.
+
+    If test has time limit, convert expire time from string to datetime object.
+    Compare this object with current date and time.
+
+    @param expire_time: date when test will expire --> str
+    @return: time left in seconds --> int
+    @return(option 1): False if time expire.
+    """
     if expire_time:
-        # конвертируем строку в datetime обьект
         expire_time_obj = datetime.strptime(expire_time, '%Y-%m-%d %H:%M:%S')
         if expire_time_obj > datetime.now().replace(microsecond=0):
             time_left = expire_time_obj - datetime.now().replace(microsecond=0)
@@ -108,19 +169,33 @@ def calculate_test_time_left(expire_time):
         return
 
 
-# отправлет email пользователю
 @shared_task()
 def send_notification_email_task(subject, message, email, html_message):
+    """
+    Send email to user with send_mail function.
+
+    Process is running in background with Celery.
+
+    @param subject: email title --> str
+    @param message: show message if user's email doesn't accept html pages --> str
+    @param email: user's email
+    @param html_message: html template with message
+    """
     send_mail(subject, message, None, [email], fail_silently=False, html_message=html_message)
 
 
-# если тест не пройден до указанной даты, он засчитывается как "просроченный" с 0 баллов
 @shared_task()
 def check_expired_test_date():
+    """
+    Compare expire date with current date for uncompleted tests.
+
+    Update test results and user progress if date expire.
+    Process is running in background periodically with Celery.
+    Check celery.py for schedule settings for this task.
+    """
     test_cases = UserTestCase.objects.filter(complete=False)
     for test_case in test_cases:
         if test_case.date_expired <= timezone.now() and not test_case.complete:
-            # обновляем статус теста
             test_case.complete = True
             test_case.result_score = 0
             test_case.test_case_result = 'Просрочен'
