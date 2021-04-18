@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block main %}
+    {% load tags %}
     <div class="content-container">
         <div class="article">
             <h1 id="article-title"><strong>{{ article.title }}</strong></h1>
@@ -20,7 +21,8 @@
                     <img src="{{ MEDIA_URL }}{{ image.image }}" alt="image">
                 {% endfor %}
                 {% for video in paragraph.youtube_video.all %}
-                    <iframe width="560" height="315" src="{{ video.source}}" frameborder="0" allowfullscreen></iframe>
+                    {% youtube_video_id video.source as video_id %}
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allowfullscreen></iframe>
                 {% endfor %}
             {% endfor %}
             {% if article.source %}
