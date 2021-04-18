@@ -7,7 +7,7 @@ register = template.Library()
 
 
 @register.simple_tag
-def number_of_tests(request, user_id):
+def number_of_tests(user_id):
     number = UserTestCase.objects.filter(user=user_id, complete=False).count()
     return number
 
