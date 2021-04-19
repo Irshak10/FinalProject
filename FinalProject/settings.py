@@ -52,8 +52,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 ]
-# SITE_ID = 3 for heroku
-SITE_ID = 2
+# SITE_ID = 3 for heroku, 2 for local
+SITE_ID = 3
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
