@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'nested_admin',
 
     'users',
+    'crispy_forms',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -205,6 +206,7 @@ DEFAULT_FILE_STORAGE = 's3_folder_storage.s3.DefaultStorage'
 DEFAULT_S3_PATH = "media"
 MEDIA_ROOT = '/%s/' % DEFAULT_S3_PATH
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/media/'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Static media folder
 # STATICFILES_STORAGE = 's3_folder_storage.s3.StaticStorage'

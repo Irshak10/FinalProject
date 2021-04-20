@@ -1,0 +1,44 @@
+{% extends 'base-testing.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block title %}
+    Настройки личного кабинета
+{% endblock %}
+
+{% block main %}
+    <div class="content-section">
+      <div class="media">
+        <img class="rounded-circle account-img" src="{{ user.profile.profile_picture.url }}">
+        <div class="media-body">
+          <h2 class="account-heading">{{ user.username }}</h2>
+          <p class="text-secondary">{{ user.email }}</p>
+        </div>
+      </div>
+      <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <fieldset class="form-group">
+              <legend class="border-bottom mb-4">Информация о пользователе</legend>
+              {{ u_form|crispy }}
+              {{ p_form|crispy }}
+          </fieldset>
+          <div class="form-group">
+              <button class="btn btn-outline-info" type="submit">Обновить</button>
+          </div>
+      </form>
+    </div>
+
+    <style>
+        .account-img {
+          height: 125px;
+          width: 125px;
+          margin-right: 20px;
+          margin-bottom: 16px;
+        }
+
+        .account-heading {
+          font-size: 2.5rem;
+        }
+    </style>
+{% endblock %}
+
+

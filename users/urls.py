@@ -1,7 +1,6 @@
 from django.urls import path, include
 from django.views.generic import TemplateView
-
-from users.views import registration_page, login_page, logout_page, user_page
+from users.views import registration_page, login_page, logout_page, profile
 
 
 urlpatterns = [
@@ -10,5 +9,5 @@ urlpatterns = [
     path('login/', login_page, name='login'),
     path('register/', registration_page, name='register'),
     path('logout/', logout_page, name='logout'),
-    path('user/', user_page, name='user'),
+    path('profile/', profile, name='profile'),
 ]
