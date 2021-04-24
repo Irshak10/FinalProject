@@ -190,5 +190,6 @@ def user_page(request):
 
     @return: render user-page.html with user's progress info.
     """
-    context = {'user_info': UserProgress.objects.get(user=request.user)}
+    user_progress, created = UserProgress.objects.get_or_create(user=request.user)
+    context = {'user_info': user_progress}
     return render(request, 'testing/user-page.html', context=context)
