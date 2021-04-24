@@ -1,23 +1,27 @@
 {% extends 'base-testing.html' %}
 
 {% block title %}
-    Получаем знания...
+    Читаем
 {% endblock %}
 
 {% block main %}
     {% load static %}
-    {% if all_articles %}
-        {% for article in all_articles %}
-            <a href="{% url 'read_article'  article.id %}" style="text-decoration: none">
-                {% if article.header_image %}
-                    <span><img src="{{ MEDIA_URL }}{{ article.header_image }}" style="width: 100pt"></span>
-                {% endif %}
-                <span style="font-size: x-large">{{ article.title }}</span>
-        {% endfor %}
-    {% else %}
-        <div class="nothing-to-show-message">
-            <div><img src="{% static 'icons/nothing_to_show.png' %}"></div>
-        </div>
-    {% endif %}
-
+    <div class="content-container">
+        {% if all_articles %}
+            {% for article in all_articles %}
+                <a href="{% url 'read_article'  article.id %}">
+                    <div class="content">
+                        {% if article.header_image %}
+                            <img src="{{ MEDIA_URL }}{{ article.header_image }}" alt="header image">
+                        {% else %}
+                            <img src="{% static 'icons/new_info.jpg' %}" alt="no image">
+                        {% endif %}
+                        <p>{{ article.title }}</p>
+                    </div>
+                </a>
+            {% endfor %}
+        {% else %}
+            <img src="{% static 'icons/no_content_1.gif' %}" id="no-content" alt="no image">
+        {% endif %}
+    </div>
 {% endblock %}

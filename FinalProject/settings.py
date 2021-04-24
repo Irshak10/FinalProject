@@ -53,8 +53,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 ]
-
-SITE_ID = 1
+# SITE_ID = 3 for heroku
+SITE_ID = 2
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -72,7 +72,7 @@ ROOT_URLCONF = 'FinalProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR, 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -92,23 +92,23 @@ WSGI_APPLICATION = 'FinalProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'corporate_portal',
-#         'USER': 'admin',
-#         'PASSWORD': 'admin',
-#         'HOST': 'localhost',
-#         'PORT': '',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'corporate_portal',
+        'USER': 'admin',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
 
 
 # Password validation
@@ -147,26 +147,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
-# Media files, save files.
-#
-# MEDIA_URL = 'images/'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'users/static/images')
 
 # Send email options
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'corporate.learning.users@gmail.com'
+EMAIL_HOST_USER = 'corporate.learning.courses@gmail.com'
 EMAIL_HOST_PASSWORD = 'RXnJ577jV37v2Mcx'
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'corporate.learning.users@gmail.com'
-
+DEFAULT_FROM_EMAIL = 'corporate.learning.courses@gmail.com'
 
 LOGIN_REDIRECT_URL = '/'
 
@@ -189,10 +189,6 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# Heroku
-
-django_heroku.settings(locals())
-
 # S3 bucket config
 
 # Credentials
@@ -201,16 +197,34 @@ AWS_SECRET_ACCESS_KEY = '8t8Ear4YTUqMctD2QNsOkzVcY13GAxopC/QTaQ+h'
 AWS_STORAGE_BUCKET_NAME = 'corporate-portal-media'
 AWS_S3_REGION_NAME = 'eu-west-2'
 
-# Uploaded Media Folder
+# Media Folder
 DEFAULT_FILE_STORAGE = 's3_folder_storage.s3.DefaultStorage'
 DEFAULT_S3_PATH = "media"
 MEDIA_ROOT = '/%s/' % DEFAULT_S3_PATH
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/media/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# Static media folder
-# STATICFILES_STORAGE = 's3_folder_storage.s3.StaticStorage'
-# STATIC_S3_PATH = 'static'
-# STATIC_ROOT = "/%s/" % STATIC_S3_PATH
-# STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/static/'
-# ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+# Activate Django-Heroku
+django_heroku.settings(locals())
+
+# Celery config (local)
+# CELERY_BROKER_URL = 'amqp://localhost/'
+#
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_TIMEZONE = 'UTC'
+# CELERY_ENABLE_UTC = True
+# CELERY_WORKER_DISABLE_RATE_LIMITS = True
+
+# Celery config (Heroku)
+CELERY_BROKER_URL = 'amqp://warpysmf:j0IQ6cghtzn1uYutrYAF5S33IdK3suxk@fish.rmq.cloudamqp.com/warpysmf'
+CELERY_BROKER_POOL_LIMIT = 1
+CELERY_BROKER_CONNECTION_TIMEOUT = 10
+CELERY_CONCURRENCY = 4
+
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TIMEZONE = 'UTC'
+CELERY_ENABLE_UTC = True

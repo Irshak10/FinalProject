@@ -1,16 +1,21 @@
 {% extends 'base-testing.html' %}
 
 {% block title %}
-    {{ test_case.title }}
+    {{ user_test_case.test_case.title }}
 {% endblock %}
 
 {% block main %}
-
-    <form action="" method="post">
-    {% csrf_token %}
-    {{ test_case.title }}<br>
-    {{ test_case.description }}<br>
-        <input type="submit" value="Начать тест" name="start_test">
-    </form>
+    <div class="test-frame" id="glass">
+        <form action="" method="post">
+            {% csrf_token %}
+            <h1>{{ user_test_case.test_case.title }}</h1>
+            <p><strong>{{ user_test_case.test_case.description }}</strong></p>
+            <p id="test-info">Проходной балл: <strong>{{ user_test_case.target_score }}</strong></p>
+            <p id="test-info">Вопросов: <strong>{{ user_test_case.test_case.question.all.count }}</strong></p>
+            <p id="test-info">Категория: <strong>{{ user_test_case.test_case.category }}</strong></p>
+            <p id="test-info">Активен до: <strong>{{ user_test_case.date_expired }}</strong></p>
+            <input type="submit" value="Начать тест" name="start_test" id="glass">
+        </form>
+    </div>
 
 {% endblock %}

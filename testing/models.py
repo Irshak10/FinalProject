@@ -24,7 +24,7 @@ class TestCase(models.Model):
 
     category = models.ForeignKey(Category, default=1, on_delete=models.DO_NOTHING, verbose_name='категория')
     title = models.CharField(max_length=255, default='новый тест', verbose_name='название теста')
-    description = models.CharField(max_length=255, default='без описания', verbose_name='описание')
+    description = models.CharField(max_length=255, default='', verbose_name='описание')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='дата создания')
 
     def __str__(self):
@@ -77,7 +77,8 @@ class UserTestCase(models.Model):
     test_case = models.ForeignKey(TestCase, on_delete=models.CASCADE, verbose_name='тест')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='дата назначения')
     date_expired = models.DateTimeField(verbose_name='пройти до', null=True)
-    time_for_one_question = models.PositiveIntegerField(verbose_name='среднее время на вопрос (сек.)', null=True, blank=True)
+    time_for_one_question = models.PositiveIntegerField(verbose_name='среднее время на вопрос (сек.)',
+                                                        null=True, blank=True)
     target_score = models.PositiveIntegerField(default=90, verbose_name='проходной балл')
     result_score = models.PositiveIntegerField(default=0, verbose_name='набранный балл', null=True, blank=True)
     complete = models.BooleanField(default=False, verbose_name='завершен')
@@ -96,18 +97,26 @@ class UserProgress(models.Model):
     average_score = models.FloatField(default=0, verbose_name='средний балл')
     average_rating = models.FloatField(default=0, verbose_name='рейтинг')
 
-    # обновляем средний балл за пройденные тесты, округленный до сотых
     def update_average_score_and_rating(self):
+        """
+        Get new values for average score and average rating.
+
+        All values are rounding to 2 digits. Example: 4,5623 --> 4.56
+        Average rating is from 0 to 5.
+        """
         self.average_score = round(self.total_score / self.total_number_of_tests_passed, 2)
         self.average_rating = round(self.average_score * 0.05, 2)
         self.save()
 
-    # ранг в виде звёзд от 0 до 5, напр. ****
     def get_5_star_rating(self):
+        """
+        Simple start rating based on average_rating.
+
+        Example: average_rating 4,35 == **** (4 stars).
+        """
         star_rating = round(self.average_rating) * '*'
         return star_rating
 
-    # получить все назначенные пользователю курсы
     def get_all_available_test_for_user(self):
         tests = UserTestCase.objects.filter(user=self.user, complete=False)
         return tests
@@ -148,5 +157,18 @@ class ParagraphImage(models.Model):
         verbose_name = 'изображение'
         verbose_name_plural = 'изображения'
 
-    paragraph = models.ForeignKey(Paragraph, on_delete=models.CASCADE, verbose_name='для параграфа', related_name='image')
+    paragraph = models.ForeignKey(Paragraph, on_delete=models.CASCADE,
+                                  verbose_name='для параграфа', related_name='image')
     image = models.ImageField(verbose_name='изображение')
+
+
+class ParagraphYoutubeVideo(models.Model):
+
+    class Meta:
+        verbose_name = 'видео с Youtube'
+        verbose_name_plural = 'видео с Youtube'
+
+    paragraph = models.ForeignKey(Paragraph, on_delete=models.CASCADE,
+                                  verbose_name='для параграфа', related_name='youtube_video')
+    source = models.URLField(max_length=255, verbose_name='ссылка на видео', null=True,
+                             help_text='напр. https://www.youtube.com/watch?v=Geek&ab_channel=Hub')

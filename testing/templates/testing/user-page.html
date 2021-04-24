@@ -1,0 +1,38 @@
+{% extends 'base-testing.html' %}
+
+{% block title %}
+    Личный кабинет
+{% endblock %}
+
+{% block main %}
+    {% load static %}
+    <div class="content-container" id="glass">
+        <div class="left-column">
+            <div class="image-profile">
+                <img src="{% static 'images/default.png' %}">
+                <div class="overlay">
+                    {% if user_info.user.first_name and user_info.user.last_name %}
+                        {{ user_info.user.first_name }} {{ user_info.user.last_name }}
+                    {% else %}
+                        {{ user_info.user.username }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="star-container">
+                {% for star in user_info.get_5_star_rating %}
+                    <img src="{% static 'icons/star1.png' %}">
+                {% endfor %}
+            </div>
+            <div class="rating-container">
+                <p>Рейтинг: {{ user_info.average_rating }}</p>
+                <p>Пройдено тестов: {{ user_info.total_number_of_tests_passed }}</p>
+                <p>Средний балл: {{ user_info.average_score }}</p>
+            </div>
+            <div class="user-links"></div>
+            <div class="user-logout">
+                <a href="{% url 'logout' %}"><button>Выход</button></a>
+            </div>
+        </div>
+        <div class="right-column"></div>
+    </div>
+{% endblock %}
