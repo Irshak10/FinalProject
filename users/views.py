@@ -19,8 +19,8 @@ def registration_page(request):
             user = form.save()
             username = form.cleaned_data.get('username')
 
-            group = Group.objects.get(name="customer")
-            user.groups.add(group)
+            # group = Group.objects.get(name="customer")
+            # user.groups.add(group)
             Profile.objects.create(
                 user=user,
             )
