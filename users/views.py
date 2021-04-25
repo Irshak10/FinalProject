@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from users.decorators import unauthenticated_user
 from django.contrib.auth.models import Group
 from users.models import Profile
+from testing.models import UserProgress
 
 
 @unauthenticated_user
@@ -74,9 +75,12 @@ def profile(request):
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
 
+    user_progress, created = UserProgress.objects.get_or_create(user=request.user)
+
     context = {
         'u_form': u_form,
-        'p_form': p_form
+        'p_form': p_form,
+        'user_info': user_progress,
     }
 
     return render(request, 'users/profile.html', context)
