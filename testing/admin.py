@@ -59,7 +59,8 @@ class UserTestCaseAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         super(UserTestCaseAdmin, self).save_model(request, obj, form, change)
         # при назначении теста пользоваетлю отпраявляется имейл с уведомлением
-        create_notification_email(obj.id)
+        if obj.user.profile.accept_email:
+            create_notification_email(obj.id)
 
 
 class UserProgressAdmin(admin.ModelAdmin):
