@@ -181,15 +181,3 @@ def search(request):
         ).filter(search=search_get)
         context = {'results': search_results}
         return render(request, 'testing/search-results.html', context=context)
-
-
-@login_required(login_url='login')
-def user_page(request):
-    """
-    Personal page for current user with personal progress.
-
-    @return: render user-page.html with user's progress info.
-    """
-    user_progress, created = UserProgress.objects.get_or_create(user=request.user)
-    context = {'user_info': user_progress}
-    return render(request, 'testing/user-page.html', context=context)
