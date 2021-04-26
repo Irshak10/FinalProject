@@ -10,9 +10,7 @@ from testing.testing_logic import *
 def index(request):
     """
     Main page with latest news.
-
     Contains last 5 articles of type 'news' and 'company_news'.
-
     @return: render index.html template with articles
     """
     context = {'last_articles': Article.objects.filter(article_type__contains='news').order_by('-id')[:5]}
@@ -23,10 +21,8 @@ def index(request):
 def user_test_cases(request):
     """
     Page with all available tests for user.
-
     Get all tests that are not completed and specified for current user.
     Place them in order of closest expire date.
-
     @return: render user-test-cases.html with tests
     """
     context = {'user_test_cases': UserTestCase.objects.filter(complete=False, user=request.user).order_by('date_expired')}
@@ -37,12 +33,10 @@ def user_test_cases(request):
 def test_case(request, user_test_id, test_id):
     """
     Shows information about test before user could start it.
-
     Check if test is exists and available for current user (@return(option 1)).
     When user starts test (@return(option 2)):
     - if test has time limit add to request.session expire time (if not exists).
     - create in request.session empty dict for future answers.
-
     @param user_test_id: UserTestCase object id --> int
     @param test_id: TestCase object id --> int
     @return: render test-case.html with current test information.
@@ -67,12 +61,10 @@ def test_case(request, user_test_id, test_id):
 def questions(request, user_test_id, test_id):
     """
     Displays questions and choices.
-
     Check expire time from request.session and finish test if there is no time left (@return(option 1)).
     If expire time doesn't exists in session, time left will be none and user will not see countdown timer.
     Get queryset of questions for current test and create pagination for every question.
     Add to request.session user`s answers. Finish test after last question (@return(option 1)).
-
     @param user_test_id: UserTestCase object id --> int
     @param test_id: TestCase object id --> int
     @return: render questions.html with questions for current test and time left (if time limit exists).
@@ -107,10 +99,8 @@ def questions(request, user_test_id, test_id):
 def results(request, user_test_id):
     """
     Calculates and displays results for current test.
-
     Get answers from request.session, calculate result score and create data for result table.
     Delete from request.session answers and expire time.
-
     @param user_test_id: UserTestCase object id --> int
     @return: render test-case-results.html with results for current test.
     @return(optional): if test was finished before, redirect to page with available tests.
@@ -135,7 +125,6 @@ def results(request, user_test_id):
 def all_news(request):
     """
     Displays list of all articles with type 'news' and 'company_news' from latest to older.
-
     @return: render all-articles.html with articles.
     """
     context = {'all_articles': Article.objects.filter(article_type__contains='news').order_by('-id')}
@@ -146,7 +135,6 @@ def all_news(request):
 def library(request):
     """
     Displays list of all articles with type 'library'.
-
     @return: render all-articles.html with articles.
     """
     context = {'all_articles': Article.objects.filter(article_type='library')}
@@ -157,7 +145,6 @@ def library(request):
 def read_article(request, article_id):
     """
     Shows page where user can read article. Return 404 if article doesn't exist.
-
     @param article_id: Article object id --> int
     @return: render article.html for chosen article.
     """
@@ -171,7 +158,6 @@ def search(request):
     """
     Search for input word in article title and category name.
     IMPORTANT: works with PostgreSQL database.
-
     @return: render search-results.html with search results.
     """
     if request.method == 'GET':
