@@ -1,47 +1,57 @@
+
 {% extends 'base-testing.html' %}
 {% load crispy_forms_filters %}
 {% load crispy_forms_tags %}
 {% block title %}
-    Настройки личного кабинета
+    Личный кабинет
 {% endblock %}
 
 {% block main %}
-    <div class="content-section">
-      <div class="media">
-        <img class="rounded-circle account-img" src="{{ user.profile.profile_picture.url }}">
-        <div class="media-body">
-          <h2 class="account-heading">{{ user.username }}</h2>
-          <p class="text-secondary">{{ user.email }}</p>
+    {% load static %}
+    <div class="content-container" id="glass">
+        <div class="left-column">
+            <div class="image-profile">
+                <img src="{{ user_info.user.profile.profile_picture.url }}">
+                <div class="overlay">
+                    {% if user_info.user.first_name and user_info.user.last_name %}
+                        {{ user_info.user.first_name }} {{ user_info.user.last_name }}
+                    {% else %}
+                        {{ user_info.user.username }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="star-container">
+                {% for star in user_info.get_5_star_rating %}
+                    <img src="{% static 'icons/star1.png' %}">
+                {% endfor %}
+            </div>
+            <div class="rating-container">
+                <p>Рейтинг: {{ user_info.average_rating }}</p>
+                <p>Пройдено тестов: {{ user_info.total_number_of_tests_passed }}</p>
+                <p>Средний балл: {{ user_info.average_score }}</p>
+            </div>
+            <div class="user-links"></div>
+            <div class="user-logout">
+                <a href="{% url 'logout' %}"><button>Выход</button></a>
+            </div>
         </div>
-      </div>
-      <form method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-          <fieldset class="form-group">
-              <legend class="border-bottom mb-4">Информация о пользователе</legend>
-              {{ u_form|crispy }}<br>
-              <a href="{% url 'password_reset' %}">Востановить пароль</a><br><br>
-              {{ p_form|crispy }}
+        <div class="right-column">
+            <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Информация о пользователе</legend>
+                    {{ u_form|crispy }}<br>
+                    <a href="{% url 'password_reset' %}">Изменить пароль</a><br><br>
+                    {{ p_form|crispy }}
+                </fieldset><br>
 
-          </fieldset><br>
+                <div class="form-group">
+                    <button class="btn btn-outline-info" type="submit">Обновить</button>
+                </div>
+            </form>
 
-          <div class="form-group">
-              <button class="btn btn-outline-info" type="submit">Обновить</button>
-          </div>
-      </form>
+{{ user.profile.accept_email }}
+{#            <p><input type="checkbox" name="a" value="user.profile.accept_email"> Нужно делать рассылку? </p>#}
+        </div>
     </div>
-
-    <style>
-        .account-img {
-          height: 125px;
-          width: 125px;
-          margin-right: 20px;
-          margin-bottom: 16px;
-        }
-
-        .account-heading {
-          font-size: 2.5rem;
-        }
-    </style>
 {% endblock %}
-
-

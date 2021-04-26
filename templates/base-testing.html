@@ -39,10 +39,7 @@
                 </a>
             </span>
             <span class="nav-item" id="nav-link">
-                <a href="{% url 'user' %}">Личный кабинет</a>
-            </span>
-            <span class="nav-item" id="nav-link">
-                <a href="{% url 'logout' %}">Выход {{ user.username }}</a>
+                <a href="{% url 'profile' %}">Личный кабинет {{ user.username }}</a>
             </span>
         </div>
     </div>
