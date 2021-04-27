@@ -17,7 +17,6 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 
 
-
 @unauthenticated_user
 def registration_page(request):
     form = UserRegisterForm()
