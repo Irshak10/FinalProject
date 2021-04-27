@@ -16,7 +16,6 @@ import django_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -27,7 +26,6 @@ SECRET_KEY = '1(9#abngg^cf!%h8jhnxqb8_reh2s+#(9&%=1_lpoy+rs7r*bd'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -56,7 +54,6 @@ INSTALLED_APPS = [
 # SITE_ID = 3 for heroku
 
 SITE_ID = 1
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -89,7 +86,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'FinalProject.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -131,7 +127,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -144,7 +139,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -159,7 +153,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
-
 # Send email options
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -173,9 +166,9 @@ DEFAULT_FROM_EMAIL = 'corporate.learning.courses@gmail.com'
 LOGIN_REDIRECT_URL = '/'
 
 AUTHENTICATION_BACKENDS = (
-     'django.contrib.auth.backends.ModelBackend',
-     'allauth.account.auth_backends.AuthenticationBackend',
- )
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 # Google authentication
 
@@ -190,6 +183,16 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+SOCIAL_AUTH_GOOGLE_PROFILE_EXTRA_PARAMS = {
+    'fields': 'name, email, picture.type(large)'
+}
+SOCIAL_AUTH_GOOGLE_EXTRA_PARAMS = [
+    {'name', 'name'},
+    {'email', 'email'},
+    {'picture', 'picture'},
+]
+
+
 
 # S3 bucket config
 
