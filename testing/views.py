@@ -170,7 +170,6 @@ def read_article(request, article_id):
 def search(request):
     """
     Search for input word in article title and category name.
-    IMPORTANT: works with PostgreSQL database.
 
     @return: render search-results.html with search results.
     """
