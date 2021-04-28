@@ -1,9 +1,7 @@
 from django.core.paginator import Paginator
-from django.utils.html import strip_tags
-from django.utils import timezone
-from django.template.loader import render_to_string
-from datetime import datetime, timedelta
 from django.core.mail import send_mail
+from django.utils import timezone
+from datetime import datetime, timedelta
 
 from celery import shared_task
 
@@ -115,21 +113,6 @@ def get_data_for_result_table(all_answers):
     return result_data
 
 
-def create_notification_email(user_test_case_id):
-    """
-    Gather all necessary data for send email function. If user has email in database - send email to him.
-
-    @param user_test_case_id: UserTestCase objects id --> int
-    """
-    user_test_case = UserTestCase.objects.get(id=user_test_case_id)
-    user = user_test_case.user
-    if user.email:
-        subject = 'New test case available'
-        html_message = render_to_string('testing/notification-about-test-case.html', {'user': user, 'test': user_test_case})
-        message = strip_tags(html_message)
-        send_notification_email_task.delay(subject, message, user.email, html_message)
-
-
 def get_expire_test_time(user_test_id):
     """
     Get time when test will expire.
@@ -172,7 +155,7 @@ def calculate_test_time_left(expire_time):
 @shared_task()
 def send_notification_email_task(subject, message, email, html_message):
     """
-    Send email to user with send_mail function.
+    Send email to user with django.send_mail function.
 
     Process is running in background with Celery.
 
