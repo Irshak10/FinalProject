@@ -29,18 +29,27 @@
             <span class="nav-item" id="nav-link">
                 <a href="{% url 'library' %}">Библиотека</a>
             </span>
-            <span class="nav-item" id="nav-link">
-                <a href="{% url 'user_test_cases' %}">
-                    Мои курсы
-                    {% number_of_tests user.id as tests %}
-                    {% if tests %}
-                        ({{ tests }})
-                    {% endif %}
-                </a>
-            </span>
-            <span class="nav-item" id="nav-link">
-                <a href="{% url 'profile' %}">Личный кабинет {{ user.username }}</a>
-            </span>
+            {% if user.is_superuser %}
+                <span class="nav-item" id="nav-link">
+                    <a href="{% url "admin:index" %}">Администрирование</a>
+                </span>
+                <span class="nav-item" id="nav-link">
+                    <a href="{% url 'logout' %}">Выход</a>
+                </span>
+            {% else %}
+                <span class="nav-item" id="nav-link">
+                    <a href="{% url 'user_test_cases' %}">
+                        Мои курсы
+                        {% number_of_tests user.id as tests %}
+                        {% if tests %}
+                            ({{ tests }})
+                        {% endif %}
+                    </a>
+                </span>
+                <span class="nav-item" id="nav-link">
+                    <a href="{% url 'profile' %}">Личный кабинет {{ user.username }}</a>
+                </span>
+            {% endif %}
         </div>
     </div>
     <div class="main" id="glass">
