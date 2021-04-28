@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.html import strip_tags
+from django.template.loader import render_to_string
 from django_celery_beat.models import (
     PeriodicTask,
     IntervalSchedule,
@@ -6,15 +8,11 @@ from django_celery_beat.models import (
     SolarSchedule,
     ClockedSchedule
 )
-
 from nested_admin.nested import NestedTabularInline, NestedModelAdmin
 
 from testing.models import *
-from testing.testing_logic import create_notification_email
+from testing.testing_logic import send_notification_email_task
 
-
-# ===== Кастомизация админ панели =====================================================================================
-# =====================================================================================================================
 
 # ===== Добавление тестов =============================================================================================
 
@@ -58,9 +56,14 @@ class UserTestCaseAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super(UserTestCaseAdmin, self).save_model(request, obj, form, change)
-        # при назначении теста пользоваетлю отпраявляется имейл с уведомлением
-        if obj.user.profile.accept_email:
-            create_notification_email(obj.id)
+        # send email to user with information about test
+        user_test_case = UserTestCase.objects.get(id=obj.id)
+        user = user_test_case.user
+        if user.email and user.profile.accept_email:
+            subject = 'Назначен новый тест'
+            html_message = render_to_string('testing/notification-about-test-case.html', {'user': user, 'test': user_test_case})
+            message = strip_tags(html_message)
+            send_notification_email_task.delay(subject, message, user.email, html_message)
 
 
 class UserProgressAdmin(admin.ModelAdmin):
@@ -81,6 +84,17 @@ admin.site.register(UserTestCase, UserTestCaseAdmin)
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ('title', 'article_type')
     list_filter = ('article_type',)
+
+    def save_model(self, request, obj, form, change):
+        super(ArticleAdmin, self).save_model(request, obj, form, change)
+        if obj.article_type == 'company_news':
+            users = User.objects.filter(profile__accept_email=True)
+            for user in users:
+                if user.email:
+                    subject = 'Новости компании'
+                    html_message = render_to_string('testing/notification-about-company-news.html', {'id': obj.id, 'user': user})
+                    message = strip_tags(html_message)
+                    send_notification_email_task.delay(subject, message, user.email, html_message)
 
 
 class ParagraphImageInline(NestedTabularInline):
