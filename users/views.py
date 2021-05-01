@@ -1,11 +1,7 @@
 from django.shortcuts import render, redirect
-from users.forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from users.decorators import unauthenticated_user
-from users.models import Profile
-from testing.models import UserProgress
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
 from django.contrib.auth.forms import PasswordResetForm
@@ -15,6 +11,11 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
+
+from users.forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from users.decorators import unauthenticated_user, allowed_mails
+from users.models import Profile
+from testing.models import UserProgress
 
 
 @unauthenticated_user
@@ -29,9 +30,7 @@ def registration_page(request):
             Profile.objects.create(
                 user=user,
             )
-
             messages.success(request, 'Account was created for ' + username)
-
             return redirect('login')
 
     context = {'form': form}
@@ -48,7 +47,7 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            return redirect('profile')
+            return redirect('index')
         else:
             messages.info(request, 'Username or password is incorrect')
 
@@ -62,6 +61,7 @@ def logout_page(request):
 
 
 @login_required(login_url='login')
+@allowed_mails()
 def profile(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
@@ -73,21 +73,22 @@ def profile(request):
             p_form.save()
             messages.success(request, f'Your account has been updated!')
             return redirect('profile')
-    # else:
-    #     u_form = UserUpdateForm(instance=request.user)
-    #     p_form = ProfileUpdateForm(instance=request.user.profile)
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
 
     user_progress, created = UserProgress.objects.get_or_create(user=request.user)
 
     context = {
-        # 'u_form': u_form,
-        # 'p_form': p_form,
+        'u_form': u_form,
+        'p_form': p_form,
         'user_info': user_progress,
     }
 
     return render(request, 'users/profile.html', context)
 
 
+@allowed_mails()
 def password_reset_request(request):
     if request.method == "POST":
         password_reset_form = PasswordResetForm(request.POST)
