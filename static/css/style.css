@@ -71,11 +71,30 @@ body {
 }
 
 .search {
-    width: 25%;
+    width: 30%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     overflow: hidden;
+}
+
+form.search input[type=text] {
+    float: left;
+}
+
+form.search button {
+    float: left;
+    border: none;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0);
+}
+
+form.search button img {
+    width: 50px;
+}
+
+form.search button img:hover {
+    width: 55px;
 }
 
 #nav-link {
@@ -91,7 +110,7 @@ body {
     width: 100%;
 }
 
-.search form input[type=search] {
+.search form input[type=text] {
     background: none;
     border: 2px rgba(255, 255, 255, 0.6) solid;
     font-size: 20px;;
@@ -99,7 +118,7 @@ body {
     padding: 10px 10px;
 }
 
-.search form input[type=search]:focus-within {
+.search form input[type=text]:focus-within {
     background: linear-gradient(to right top, rgba(255, 255, 255, 0.5), rgba(252, 248, 165, 0.5));
 }
 

@@ -13,30 +13,40 @@
 <body>
     <div class="navbar" id="glass">
         <div class="navbar-content">
+
             <span class="nav-item" id="logo">
                 <a href="{% url 'index' %}">
                     <img src="{% static 'icons/portal-logo.png' %}">
                 </a>
             </span>
+
             <span class="search" id="nav-link">
-                <form method="get" action="{% url 'search' %}">
-                    <input type="search" placeholder="Поиск" name="search">
+                <form class="search" method="get" action="{% url 'search' %}">
+                    <input type="text" placeholder="Поиск" name="search">
+                    <button type="submit"><img src="{% static 'icons/search.png' %}"></button>
                 </form>
             </span>
+
             <span class="nav-item" id="nav-link">
                 <a href="{% url 'all_news' %}">Новости</a>
             </span>
+
             <span class="nav-item" id="nav-link">
                 <a href="{% url 'library' %}">Библиотека</a>
             </span>
+
             {% if user.is_superuser %}
+
                 <span class="nav-item" id="nav-link">
                     <a href="{% url "admin:index" %}">Администрирование</a>
                 </span>
+
                 <span class="nav-item" id="nav-link">
                     <a href="{% url 'logout' %}">Выход</a>
                 </span>
+
             {% else %}
+
                 <span class="nav-item" id="nav-link">
                     <a href="{% url 'user_test_cases' %}">
                         Мои курсы
@@ -46,9 +56,11 @@
                         {% endif %}
                     </a>
                 </span>
+
                 <span class="nav-item" id="nav-link">
                     <a href="{% url 'profile' %}">Личный кабинет {{ user.username }}</a>
                 </span>
+
             {% endif %}
         </div>
     </div>
