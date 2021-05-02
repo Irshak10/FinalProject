@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
+
     'django_celery_beat',
     'storages',
     's3_folder_storage',
@@ -47,13 +50,12 @@ INSTALLED_APPS = [
 
     'users',
     'crispy_forms',
-    'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 ]
-# SITE_ID = 3 for heroku
+
 SITE_ID = 3
 
 MIDDLEWARE = [
