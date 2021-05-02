@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import reverse
 from django.contrib.auth.models import User
 
 
@@ -139,6 +140,9 @@ class Article(models.Model):
     article_type = models.CharField(max_length=15, choices=TYPE, default='news', verbose_name='тип статьи')
     source = models.URLField(max_length=200, verbose_name='источник', null=True, blank=True)
     created = models.DateTimeField(auto_now=True, verbose_name='дата создания')
+
+    def get_absolute_url(self):
+        return reverse('read_article', kwargs={'article_id': self.id})
 
 
 class Paragraph(models.Model):
