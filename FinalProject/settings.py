@@ -21,11 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = '1(9#abngg^cf!%h8jhnxqb8_reh2s+#(9&%=1_lpoy+rs7r*bd'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-SITE_ID = 1
+SITE_ID = 3
 
 ALLOWED_HOSTS = []
 
@@ -93,10 +94,20 @@ WSGI_APPLICATION = 'FinalProject.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 # Database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'corporate_portal',
+        'USER': 'admin',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -141,7 +152,9 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 
 
 LOGIN_REDIRECT_URL = '/'
@@ -152,6 +165,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # Google authentication
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -164,8 +178,36 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# Activate Django-Heroku
+django_heroku.settings(locals())
+
+# S3 bucket config
+AWS_ACCESS_KEY_ID = 'AKIA57ZNB3MGTDPNPZY3'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'corporate-portal-media'
+AWS_S3_REGION_NAME = 'eu-west-2'
+# Media Folder
+DEFAULT_FILE_STORAGE = 's3_folder_storage.s3.DefaultStorage'
+DEFAULT_S3_PATH = "media"
+MEDIA_ROOT = '/%s/' % DEFAULT_S3_PATH
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/media/'
+
+
+# Send email options
+EMAIL_HOST_USER = 'corporate.learning.courses@gmail.com'
+EMAIL_HOST_PASSWORD = 'RXnJ577jV37v2Mcx'
+DEFAULT_FROM_EMAIL = 'corporate.learning.courses@gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+
 # Celery config
-CELERY_BROKER_URL = 'amqp://localhost/'
+CELERY_BROKER_URL = 'amqp://warpysmf:j0IQ6cghtzn1uYutrYAF5S33IdK3suxk@fish.rmq.cloudamqp.com/warpysmf'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
@@ -175,36 +217,3 @@ CELERY_WORKER_DISABLE_RATE_LIMITS = True
 CELERY_BROKER_POOL_LIMIT = 1
 CELERY_BROKER_CONNECTION_TIMEOUT = 10
 CELERY_CONCURRENCY = 4
-
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-# Activate Django-Heroku
-django_heroku.settings(locals())
-
-
-# S3 bucket config
-AWS_ACCESS_KEY_ID = 'key_id'
-AWS_SECRET_ACCESS_KEY = 'access_key'
-AWS_STORAGE_BUCKET_NAME = 'bucket_name'
-AWS_S3_REGION_NAME = 'e.g. us-west-1'
-# Media Folder
-DEFAULT_FILE_STORAGE = 's3_folder_storage.s3.DefaultStorage'
-DEFAULT_S3_PATH = "media"
-MEDIA_ROOT = '/%s/' % DEFAULT_S3_PATH
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/media/'
-
-
-# Send email options
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'example@mail.com'
-EMAIL_HOST_PASSWORD = 'email_password'
-DEFAULT_FROM_EMAIL = 'example@mail.com'
-
-
-try:
-    from local_settings import *
-except ImportError:
-    pass
