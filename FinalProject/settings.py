@@ -182,13 +182,11 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 django_heroku.settings(locals())
 
 
-try:
-    from local_settings import *
-except ImportError:
-    pass
-
-
 # S3 bucket config
+AWS_ACCESS_KEY_ID = 'key_id'
+AWS_SECRET_ACCESS_KEY = 'access_key'
+AWS_STORAGE_BUCKET_NAME = 'bucket_name'
+AWS_S3_REGION_NAME = 'e.g. us-west-1'
 # Media Folder
 DEFAULT_FILE_STORAGE = 's3_folder_storage.s3.DefaultStorage'
 DEFAULT_S3_PATH = "media"
@@ -201,3 +199,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'example@mail.com'
+EMAIL_HOST_PASSWORD = 'email_password'
+DEFAULT_FROM_EMAIL = 'example@mail.com'
+
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
