@@ -1,3 +1,7 @@
+# This module contains most of 'testing' app`s business logic.
+# It helps to reduce visual size of other modules (like views.py)
+# and makes easier to use one function in different modules.
+
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.utils import timezone
@@ -5,7 +9,7 @@ from datetime import datetime, timedelta
 
 from celery import shared_task
 
-from testing.models import *
+from testing.models import UserTestCase, UserProgress, Question, Answer
 
 
 def create_test_case_pagination(page, test_case_questions):
@@ -174,7 +178,7 @@ def check_expired_test_date():
 
     Update test results and user progress if date expire.
     Process is running in background periodically with Celery.
-    Check celery.py for schedule settings for this task.
+    Check celery.py for schedule settings of this task.
     """
     test_cases = UserTestCase.objects.filter(complete=False)
     for test_case in test_cases:

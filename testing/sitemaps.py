@@ -6,6 +6,8 @@ from testing.models import Article
 
 class IndexViewSitemap(Sitemap):
 
+    changefreq = 'daily'
+
     def items(self):
         return ['index', 'all_news', 'library']
 

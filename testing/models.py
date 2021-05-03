@@ -78,8 +78,7 @@ class UserTestCase(models.Model):
     test_case = models.ForeignKey(TestCase, on_delete=models.CASCADE, verbose_name='тест')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='дата назначения')
     date_expired = models.DateTimeField(verbose_name='пройти до', null=True)
-    time_for_one_question = models.PositiveIntegerField(verbose_name='среднее время на вопрос (сек.)',
-                                                        null=True, blank=True)
+    time_for_one_question = models.PositiveIntegerField(verbose_name='среднее время на вопрос (сек.)', null=True, blank=True)
     target_score = models.PositiveIntegerField(default=90, verbose_name='проходной балл')
     result_score = models.PositiveIntegerField(default=0, verbose_name='набранный балл', null=True, blank=True)
     complete = models.BooleanField(default=False, verbose_name='завершен')
@@ -111,14 +110,16 @@ class UserProgress(models.Model):
 
     def get_5_star_rating(self):
         """
-        Simple start rating based on average_rating.
-
+        @return: star rating based on average_rating.
         Example: average_rating 4,35 == **** (4 stars).
         """
         star_rating = round(self.average_rating) * '*'
         return star_rating
 
     def get_all_available_test_for_user(self):
+        """
+        @return: queryset of available tests for current user
+        """
         tests = UserTestCase.objects.filter(user=self.user, complete=False)
         return tests
 
@@ -161,8 +162,7 @@ class ParagraphImage(models.Model):
         verbose_name = 'изображение'
         verbose_name_plural = 'изображения'
 
-    paragraph = models.ForeignKey(Paragraph, on_delete=models.CASCADE,
-                                  verbose_name='для параграфа', related_name='image')
+    paragraph = models.ForeignKey(Paragraph, on_delete=models.CASCADE, verbose_name='для параграфа', related_name='image')
     image = models.ImageField(verbose_name='изображение')
 
 

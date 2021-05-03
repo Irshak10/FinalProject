@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import SearchVector
 
+from testing.models import *
 from testing.testing_logic import *
 
 
@@ -73,6 +73,7 @@ def questions(request, user_test_id, test_id):
     Get queryset of questions for current test and create pagination for every question.
     Add to request.session user`s answers. Finish test after last question (@return(option 1)).
 
+    @param request
     @param user_test_id: UserTestCase object id --> int
     @param test_id: TestCase object id --> int
     @return: render questions.html with questions for current test and time left (if time limit exists).
@@ -111,6 +112,7 @@ def results(request, user_test_id):
     Get answers from request.session, calculate result score and create data for result table.
     Delete from request.session answers and expire time.
 
+    @param request
     @param user_test_id: UserTestCase object id --> int
     @return: render test-case-results.html with results for current test.
     @return(optional): if test was finished before, redirect to page with available tests.
@@ -158,6 +160,7 @@ def read_article(request, article_id):
     """
     Shows page where user can read article. Return 404 if article doesn't exist.
 
+    @param request
     @param article_id: Article object id --> int
     @return: render article.html for chosen article.
     """

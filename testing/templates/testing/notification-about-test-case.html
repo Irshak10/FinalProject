@@ -8,8 +8,10 @@
     <h1>Новое тестирование уже доступно.</h1>
     <hr>
     <strong><p>Привет, {{ user.username }}!</p></strong>
-    <p>Пожалуйста, посети Корпоративный портал обучения до <strong>{{ test.date_expired }}</strong>
+    <p>Пожалуйста, посети <a href="http://127.0.0.1:8000">Корпоративный портал обучения</a> до <strong>{{ test.date_expired }}</strong>
         для прохождения тестироания на тему <strong>{{ test.test_case.title }}</strong>.</p>
     Есть вопрос? Задай прямо в ответном письме!
 </body>
 </html>
+
+{# https://corporate-portal.herokuapp.com #}
