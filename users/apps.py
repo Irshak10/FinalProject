@@ -5,4 +5,4 @@ class CoursesConfig(AppConfig):
     name = 'users'
 
     def ready(self):
-        import users.signals
+        import users.models

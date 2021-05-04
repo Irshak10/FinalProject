@@ -39,18 +39,15 @@
             {% csrf_token %}
                 <fieldset class="form-group">
                     <legend class="border-bottom mb-4">Информация о пользователе</legend>
-                    {{ u_form|crispy }}<br>
+                    {{ user_form|crispy }}<br>
                     <a href="{% url 'password_change' %}">Изменить пароль</a><br><br>
-                    {{ p_form|crispy }}
+                    {{ profile_form|crispy }}
                 </fieldset><br>
 
                 <div class="form-group">
                     <button class="btn btn-outline-info" type="submit">Обновить</button>
                 </div>
             </form>
-
-{#{{ user.profile.accept_email }}#}
-{#            <p><input type="checkbox" name="a" value="user.profile.accept_email"> Нужно делать рассылку? </p>#}
         </div>
     </div>
 {% endblock %}
