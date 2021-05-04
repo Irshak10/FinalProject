@@ -1,5 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.contrib.auth.models import User
+
 from users.models import ConfirmedMail
 
 
@@ -33,9 +35,10 @@ def allowed_mails():
             mails = []
             for i in ConfirmedMail.objects.all():
                 mails.append(i.mails_list)
-            if request.user.email in mails or request.user.username == 'admin':
+            if request.user.email in mails or request.user.is_superuser:
                 return view_func(request, *args, **kwargs)
             else:
+                User.objects.get(email=request.user.email).delete()
                 return HttpResponse('Your mail is not confirmed by admin to view this page')
         return wrapper_func
     return decorator
