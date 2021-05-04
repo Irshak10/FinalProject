@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from users.models import ConfirmedMail
 
 
 def unauthenticated_user(view_func):
@@ -8,11 +9,10 @@ def unauthenticated_user(view_func):
             return redirect('index')
         else:
             return view_func(request, *args, **kwargs)
-
     return wrapper_func
 
-#
-# def allower_users(allowed_roles=[]):
+
+# def allowed_mails():
 #     def decorator(view_func):
 #         def wrapper_func(request, *args, **kwargs):
 #
@@ -20,27 +20,22 @@ def unauthenticated_user(view_func):
 #             if request.user.groups.exists():
 #                 group = request.user.groups.all()[0].name
 #
-#             if group in allowed_roles:
+#             if group == 'registered company mails':
 #                 return view_func(request, *args, **kwargs)
 #             else:
-#                 return HttpResponse('You are not authorized to view this page')
-#
+#                 return HttpResponse('Your mail is not confirmed by admin to view this page')
 #         return wrapper_func
-#
 #     return decorator
 
-
-def admin_only(view_func):
-    def wrapper_function(request, *args, **kwargs):
-
-        group = None
-        if request.user.groups.exists():
-            group = request.user.groups.all()[0].name
-
-        if group == 'customer':
-            return redirect('user')
-
-        if group == 'admin':
-            return view_func(request, *args, **kwargs)
-
-    return wrapper_function
+def allowed_mails():
+    def decorator(view_func):
+        def wrapper_func(request, *args, **kwargs):
+            mails = []
+            for i in ConfirmedMail.objects.all():
+                mails.append(i.mails_list)
+            if request.user.email in mails or request.user.username == 'admin':
+                return view_func(request, *args, **kwargs)
+            else:
+                return HttpResponse('Your mail is not confirmed by admin to view this page')
+        return wrapper_func
+    return decorator

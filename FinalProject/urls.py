@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from testing.sitemaps import IndexViewSitemap, ArticleSitemap
+from users import views
 
 
 sitemaps = {
@@ -32,5 +33,6 @@ urlpatterns = [
     path('', include('users.urls')),
     path('admin/', admin.site.urls),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}),
+    path('password_reset', views.password_reset_request, name='password_reset')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

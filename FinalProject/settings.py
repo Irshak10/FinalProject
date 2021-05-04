@@ -168,6 +168,16 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+SOCIAL_AUTH_GOOGLE_PROFILE_EXTRA_PARAMS = {
+    'fields': 'name, email, picture.type(large)'
+}
+SOCIAL_AUTH_GOOGLE_EXTRA_PARAMS = [
+    {'name', 'name'},
+    {'email', 'email'},
+    {'picture', 'picture'},
+]
+
+
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
