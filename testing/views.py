@@ -5,8 +5,11 @@ from django.contrib.postgres.search import SearchVector
 from testing.models import *
 from testing.testing_logic import *
 
+from users.decorators import allowed_mails
+
 
 @login_required(login_url='login')
+@allowed_mails()
 def index(request):
     """
     Main page with latest news.
