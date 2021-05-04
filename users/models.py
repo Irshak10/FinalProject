@@ -28,4 +28,7 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class ConfirmedMail(models.Model):
-    mails_list = models.TextField(max_length=1000)
+    mails_list = models.TextField(max_length=250)
+
+    def __str__(self):
+        return self.mails_list
