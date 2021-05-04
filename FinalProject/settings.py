@@ -178,8 +178,6 @@ SOCIAL_AUTH_GOOGLE_EXTRA_PARAMS = [
 ]
 
 
-
-
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
