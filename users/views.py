@@ -79,9 +79,12 @@ def profile(request):
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
 
+    user_progress, created = UserProgress.objects.get_or_create(user=request.user)
+
     return render(request, 'users/profile.html', {
         'user_form': user_form,
-        'profile_form': profile_form
+        'profile_form': profile_form,
+        'user_info': user_progress,
     })
 
 
