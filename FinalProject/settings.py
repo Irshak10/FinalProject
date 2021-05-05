@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 import django_heroku
+from decouple import config, Csv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '1(9#abngg^cf!%h8jhnxqb8_reh2s+#(9&%=1_lpoy+rs7r*bd'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool, default=False)
 
-ALLOWED_HOSTS = []
+SITE_ID = config('SITE_ID', cast=int, default=1)
+
+ALLOWED_HOSTS = ['corporate-portal.herokuapp.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -36,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
+
     'django_celery_beat',
     'storages',
     's3_folder_storage',
@@ -45,15 +52,12 @@ INSTALLED_APPS = [
 
     'users',
     'crispy_forms',
-    'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 ]
-# SITE_ID = 3 for heroku
 
-SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -92,21 +96,14 @@ WSGI_APPLICATION = 'FinalProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': config('DB_ENGINE', default='django.db.backends.sqlite3'),
+        'NAME': config('DB_NAME', default=BASE_DIR / 'db.sqlite3'),
+        'USER': config('DB_USER', default=''),
+        'PASSWORD': config('DB_PASSWORD', default=''),
+        'HOST': config('DB_HOST', default=''),
+        'PORT': '',
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'corporate_portal',
-#         'USER': 'admin',
-#         'PASSWORD': 'admin',
-#         'HOST': 'localhost',
-#         'PORT': '',
-#     }
-# }
 
 
 # Password validation
@@ -146,22 +143,10 @@ USE_TZ = True
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
-
-# Send email options
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'corporate.learning.courses@gmail.com'
-EMAIL_HOST_PASSWORD = 'RXnJ577jV37v2Mcx'
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'corporate.learning.courses@gmail.com'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 LOGIN_REDIRECT_URL = '/'
 
@@ -193,43 +178,49 @@ SOCIAL_AUTH_GOOGLE_EXTRA_PARAMS = [
 ]
 
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# S3 bucket config
 
-# Credentials
-AWS_ACCESS_KEY_ID = 'AKIA57ZNB3MGTDPNPZY3'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'corporate-portal-media'
-AWS_S3_REGION_NAME = 'eu-west-2'
+# This project use Amazon S3 as storage for media files.
+# Create S3 bucket or provide your own MEDIA_ROOT and MEDIA_URL.
+# S3 bucket settings
 
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME')
 # Media Folder
 DEFAULT_FILE_STORAGE = 's3_folder_storage.s3.DefaultStorage'
 DEFAULT_S3_PATH = "media"
 MEDIA_ROOT = '/%s/' % DEFAULT_S3_PATH
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/media/'
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# Activate Django-Heroku
-django_heroku.settings(locals())
 
-# Celery config (local)
-# CELERY_BROKER_URL = 'amqp://localhost/'
-#
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_ACCEPT_CONTENT = ['json']
-# CELERY_TIMEZONE = 'UTC'
-# CELERY_ENABLE_UTC = True
-# CELERY_WORKER_DISABLE_RATE_LIMITS = True
+# Send email options
 
-# Celery config (Heroku)
-CELERY_BROKER_URL = 'amqp://warpysmf:j0IQ6cghtzn1uYutrYAF5S33IdK3suxk@fish.rmq.cloudamqp.com/warpysmf'
-CELERY_BROKER_POOL_LIMIT = 1
-CELERY_BROKER_CONNECTION_TIMEOUT = 10
-CELERY_CONCURRENCY = 4
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
+
+# Celery config
+
+CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='amqp://localhost')
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TIMEZONE = 'UTC'
 CELERY_ENABLE_UTC = True
+CELERY_WORKER_DISABLE_RATE_LIMITS = True
+CELERY_BROKER_POOL_LIMIT = 1
+CELERY_BROKER_CONNECTION_TIMEOUT = 10
+CELERY_CONCURRENCY = 4
+
+
+# Activate Django-Heroku
+
+django_heroku.settings(locals())
