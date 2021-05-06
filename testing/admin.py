@@ -134,3 +134,4 @@ admin.site.unregister(SolarSchedule)
 admin.site.unregister(ClockedSchedule)
 
 admin.site.site_header = "Корпоративный портал обучения"
+admin.site.site_title = "Корпоративный портал обучения"
