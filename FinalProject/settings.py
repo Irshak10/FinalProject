@@ -29,7 +29,7 @@ DEBUG = config('DEBUG', cast=bool, default=False)
 
 SITE_ID = config('SITE_ID', cast=int, default=1)
 
-ALLOWED_HOSTS = ['corporate-portal.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 # Application definition
 
