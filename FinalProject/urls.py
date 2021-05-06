@@ -31,7 +31,7 @@ sitemaps = {
 urlpatterns = [
     path('', include('testing.urls')),
     path('', include('users.urls')),
-    path('admin/', admin.site.urls),
+    path('whosyourdaddy/', admin.site.urls),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}),
     path('password_reset', views.password_reset_request, name='password_reset')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
