@@ -19,6 +19,7 @@ from testing.models import UserProgress
 
 
 @unauthenticated_user
+# @registration_check
 def registration_page(request):
     """
     This function performs registration of a new user account.
