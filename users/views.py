@@ -20,6 +20,12 @@ from testing.models import UserProgress
 
 @unauthenticated_user
 def registration_page(request):
+    """
+    This function performs registration of a new user account.
+    :return:
+    If the verification is successful, the user's data is saved to the database.
+    After which it is redirected to the login page, where he can log in using the current data of the new user.
+    """
     form = UserRegisterForm()
 
     if request.method == 'POST':
@@ -39,6 +45,14 @@ def registration_page(request):
 
 @unauthenticated_user
 def login_page(request):
+    """
+    Materials used:
+    - https://docs.djangoproject.com/en/3.2/topics/auth/default/#auth-web-requests
+
+    This function is needed to check when the user logs in.
+    Verification is carried out using the methods:
+        authenticate(login and password verification) and login(opening access).
+    """
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -56,6 +70,14 @@ def login_page(request):
 
 
 def logout_page(request):
+    """
+    Materials used:
+    - https://docs.djangoproject.com/en/3.2/topics/auth/default/#auth-web-requests
+    To log out a user who has been logged in via django.contrib.auth.login(),
+        use django.contrib.auth.logout() within your view.
+    It takes an HttpRequest object and has no return value.
+    :return: the user redirected to the Login page.
+    """
     logout(request)
     return redirect('login')
 
@@ -63,11 +85,19 @@ def logout_page(request):
 @login_required(login_url='login')
 @allowed_mails()
 def profile(request):
+    """
+    Materials used:
+    - https://docs.djangoproject.com/en/3.2/topics/auth/default/#auth-web-requests
+
+    This function is responsible for displaying and changing all the profile data allowed for editing.
+    Here you save the changed data, as well as display them after saving,
+        by redirecting the user to your personal account with up-to-date data.
+    """
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)
         profile_form = ProfileUpdateForm(request.POST,
-                                   request.FILES,
-                                   instance=request.user.profile)
+                                         request.FILES,
+                                         instance=request.user.profile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
@@ -88,8 +118,14 @@ def profile(request):
     })
 
 
-@allowed_mails()
 def password_reset_request(request):
+    """
+    Materials used:
+    - https://docs.djangoproject.com/en/3.2/topics/auth/default/
+
+    Function for operation of password reset.
+    Here you can specify the necessary settings for sending a letter with further instructions on how to reset your password.
+    """
     if request.method == "POST":
         password_reset_form = PasswordResetForm(request.POST)
         if password_reset_form.is_valid():

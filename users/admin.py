@@ -1,7 +1,9 @@
 from django.contrib import admin
+
 from users.models import Profile, ConfirmedMail
 
-# Register your models here.
+
+# Represents Profile and ConfirmedMail models at admin site.
 
 admin.site.register(Profile)
 admin.site.register(ConfirmedMail)
