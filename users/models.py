@@ -12,8 +12,9 @@ class Profile(models.Model):
         - user - used as a nickname for each user, has a binding of OneToOneField, to the Class User from the Auth model;
         - profile_picture - used as a profile photo, assigned only to this site.
             (initially installed by default also, the user can change his photo in his personal account);
-        - phone_number - field for entering the user's phone number (Using IntegerField to input only numbers);
-        - accept_email - this parameter is responsible for the ability to disable / enable sending messages to your mail.
+        - phone_number - field for entering the user's phone number
+            (Using PositiveIntegerField to input only positive numbers);
+        - accept_email - this parameter is responsible for the ability to disable/enable sending messages to your mail.
     Methods:
         - __str__ - a standard method that is responsible for displaying information.
             The method expects only an instance as an argument and must return a string;
@@ -21,7 +22,7 @@ class Profile(models.Model):
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     profile_picture = models.ImageField(upload_to='static/images', default='static/images/default.png')
-    phone_number = models.IntegerField(default='')
+    phone_number = models.PositiveIntegerField(default=0)
     accept_email = models.BooleanField(default=True)
 
     def __str__(self):
