@@ -1,3 +1,8 @@
+"""Custom template tags.
+
+This module contains different custom tag that can be used in templates
+and allows you not to use calculations and business logic directly in templates.
+"""
 from django import template
 import re
 
