@@ -47,10 +47,10 @@ INSTALLED_APPS = [
     'storages',
     's3_folder_storage',
 
-    'testing',
+    'testing.apps.TestingConfig',
     'nested_admin',
 
-    'users',
+    'users.apps.UsersConfig',
     'crispy_forms',
     'allauth',
     'allauth.account',
