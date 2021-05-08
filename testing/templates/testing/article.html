@@ -8,13 +8,16 @@
     {% load tags %}
     <div class="content-container">
         <div class="article">
-            <h1 id="article-title"><strong>{{ article.title }}</strong></h1>
+            <h1 id="article-title">{{ article.title }}</h1>
             <p style="text-align: left; font-size: 13px">{{ article.created }}</p>
             {% if article.header_image %}
                 <img src="{{ MEDIA_URL }}{{ article.header_image }}" style="width: 100%" alt="header image">
             {% endif %}
             {% for paragraph in article.paragraph.all %}
                 <div class="paragraph">
+                    {% if paragraph.paragraph_title %}
+                        <h3>{{ paragraph.paragraph_title }}</h3>
+                    {% endif %}
                     {{ paragraph.text }}
                 </div>
                 {% for image in paragraph.image.all %}
