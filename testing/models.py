@@ -153,6 +153,7 @@ class Paragraph(models.Model):
         verbose_name_plural = 'параграфы'
 
     article = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='статья', related_name='paragraph')
+    paragraph_title = models.CharField(max_length=255, verbose_name='заголовок параграфа', null=True, blank=True)
     text = models.TextField(verbose_name='параграф', null=True, blank=True)
 
 
