@@ -1,7 +1,9 @@
-# This module contains most of 'testing' app`s business logic.
-# It helps to reduce visual size of other modules (like views.py)
-# and makes easier to use one function in different modules.
+"""Business logic of project.
 
+This module contains most of 'testing' app`s business logic.
+It helps to reduce visual size of other modules (like views.py)
+and makes easier to use one function in different modules.
+"""
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.utils import timezone
