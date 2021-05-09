@@ -78,6 +78,10 @@ body {
     overflow: hidden;
 }
 
+.main_2  > a{
+    font-size: 20px !important;
+}
+
 form.search input[type=text] {
     float: left;
 }
@@ -600,7 +604,8 @@ form.search button img:hover {
     float: right;
     width: 75%;
     height: 100%;
-    padding: 5px;
+    padding: 10px;
+
 }
 
 .left-column .image-profile {
