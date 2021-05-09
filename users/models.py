@@ -23,7 +23,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     profile_picture = models.ImageField(upload_to='static/images', default='static/images/default.png')
     phone_number = models.PositiveIntegerField(default=0)
-    accept_email = models.BooleanField(default=True)
+    accept_email = models.BooleanField(default=True, verbose_name='получать e-mails')
 
     def __str__(self):
         return f'{self.user.username} Profile'
