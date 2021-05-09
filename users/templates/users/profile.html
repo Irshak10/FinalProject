@@ -39,25 +39,35 @@
             {% csrf_token %}
                 <fieldset class="form-group">
                     <legend class="border-bottom mb-4" align="center"><h3>/ Информация о пользователе /</h3></legend>
-                    {{ user_form|crispy }}<br>
-                    <a href="{% url 'password_change' %} ">Изменить пароль</a><br>
 
-                    {% for foo in profile_form %}
-                    {{ foo.label }}:
+                    <div class="main_1">
+                    {% for foo in user_form %}
+                        <b>{{ foo.label }}:</b>
                     {{ foo }}<br><br>
-
                     {% endfor %}
+                    </div>
 
-{#                    {{ profile_form|crispy }}#}
+{#                    {{ user_form|crispy }}<br>#}
+                    <div class="main_2">
+                        <b>Изменение пароля:</b> <a href="{% url 'password_change' %} ">Изменить пароль</a><br><br>
+
+                        {% for foo in profile_form %}
+                            <b>{{ foo.label }}:</b>
+                        {{ foo }}<br><br>
+                        {% endfor %}
+                    </div>
+{#                  {{ profile_form|crispy }}#}
                 </fieldset><br>
 
                 <div class="form-group">
                     <i><b>После редактирования данных, изменения нужно обязательно применить*</i></b><br><br>
                     <button class="btn btn-outline-info" type="submit">Применить изменения</button>
                 </div><br>
+
                 {% for message in messages %}
-                                <p id="messages">{{ message }}</p>
+                    <b><p id="messages">{{ message }}</p><b/>
                 {% endfor %}
+
             </form>
         </div>
     </div>
