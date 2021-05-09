@@ -38,15 +38,26 @@
             <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
                 <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">Информация о пользователе</legend>
+                    <legend class="border-bottom mb-4" align="center"><h3>/ Информация о пользователе /</h3></legend>
                     {{ user_form|crispy }}<br>
-                    <a href="{% url 'password_change' %}">Изменить пароль</a><br><br>
-                    {{ profile_form|crispy }}
+                    <a href="{% url 'password_change' %} ">Изменить пароль</a><br>
+
+                    {% for foo in profile_form %}
+                    {{ foo.label }}:
+                    {{ foo }}<br><br>
+
+                    {% endfor %}
+
+{#                    {{ profile_form|crispy }}#}
                 </fieldset><br>
 
                 <div class="form-group">
-                    <button class="btn btn-outline-info" type="submit">Обновить</button>
-                </div>
+                    <i><b>После редактирования данных, изменения нужно обязательно применить*</i></b><br><br>
+                    <button class="btn btn-outline-info" type="submit">Применить изменения</button>
+                </div><br>
+                {% for message in messages %}
+                                <p id="messages">{{ message }}</p>
+                {% endfor %}
             </form>
         </div>
     </div>

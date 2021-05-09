@@ -11,12 +11,20 @@ class UserRegisterForm(UserCreationForm):
 
     UserRegisterForm it`s form accepts the required parameters when registering a user.
     This User model is extended by the Profile model in models.py.
+    This form also has an additional "clean_email" method that checks the uniqueness of the entered email.
+    If the mail has already been registered earlier, an error will be generated.
     """
     email = forms.EmailField()
 
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+
+    def clean_email(self):
+        email = self.cleaned_data['email'].strip()
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError('Эта почта уже зарегистрирована')
+        return self.cleaned_data
 
 
 class UserUpdateForm(forms.ModelForm):

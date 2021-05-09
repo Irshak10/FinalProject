@@ -47,17 +47,3 @@ def allowed_mails():
                 return HttpResponse('Your mail is not confirmed by admin to view this page')
         return wrapper_func
     return decorator
-
-
-# def registration_check():
-#     def decorator(view_func):
-#         def wrapper_func(request, *args, **kwargs):
-#             dublikacte_mails = []
-#             for i in user.objects.mail():
-#                 dublikacte_mails.append(i.mails_list)
-#             if request.user.email in dublikacte_mails:
-#                 return view_func(request, *args, **kwargs)
-#             else:
-#                 return HttpResponse('Account with your mail already registered, please choose other mail')
-#         return wrapper_func
-#     return decorator

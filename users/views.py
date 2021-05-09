@@ -19,7 +19,6 @@ from testing.models import UserProgress
 
 
 @unauthenticated_user
-# @registration_check
 def registration_page(request):
     """
     This function performs registration of a new user account.
@@ -144,7 +143,7 @@ def password_reset_request(request):
                         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                         "user": user,
                         'token': default_token_generator.make_token(user),
-                        'protocol': 'https',
+                        'protocol': 'http',
                     }
                     email = render_to_string(email_template_name, c)
                     try:
