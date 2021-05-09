@@ -5,8 +5,22 @@
 {% endblock %}
 
 {% block main %}
-    РЕЗУЛЬТАТЫ ПОИСКА<hr>
-    {% for result in results %}
-        <a href="{% url 'read_article' result.id %}">{{ result.title }}</a><br>
-    {% endfor %}
+
+    <div class="content-container">
+        <table class="table-content">
+            <tr id="head-table">
+                <th>Найдено: {{ results.all.count }}</th>
+            </tr>
+        </table>
+        <table class="table-content">
+            {% for result in results %}
+                <tr id="rows">
+                    <td>
+                        <a href="{% url 'read_article' result.id %}">{{ result.title }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
 {% endblock %}

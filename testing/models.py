@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import reverse
 from django.contrib.auth.models import User
 
 
@@ -24,7 +25,7 @@ class TestCase(models.Model):
 
     category = models.ForeignKey(Category, default=1, on_delete=models.DO_NOTHING, verbose_name='категория')
     title = models.CharField(max_length=255, default='новый тест', verbose_name='название теста')
-    description = models.CharField(max_length=255, default='без описания', verbose_name='описание')
+    description = models.CharField(max_length=255, default='', verbose_name='описание')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='дата создания')
 
     def __str__(self):
@@ -96,19 +97,29 @@ class UserProgress(models.Model):
     average_score = models.FloatField(default=0, verbose_name='средний балл')
     average_rating = models.FloatField(default=0, verbose_name='рейтинг')
 
-    # обновляем средний балл за пройденные тесты, округленный до сотых
     def update_average_score_and_rating(self):
+        """
+        Get new values for average score and average rating.
+
+        All values are rounding to 2 digits. Example: 4,5623 --> 4.56
+        Average rating is from 0 to 5.
+        """
         self.average_score = round(self.total_score / self.total_number_of_tests_passed, 2)
         self.average_rating = round(self.average_score * 0.05, 2)
         self.save()
 
-    # ранг в виде звёзд от 0 до 5, напр. ****
     def get_5_star_rating(self):
+        """
+        @return: star rating based on average_rating.
+        Example: average_rating 4,35 == **** (4 stars).
+        """
         star_rating = round(self.average_rating) * '*'
         return star_rating
 
-    # получить все назначенные пользователю курсы
     def get_all_available_test_for_user(self):
+        """
+        @return: queryset of available tests for current user
+        """
         tests = UserTestCase.objects.filter(user=self.user, complete=False)
         return tests
 
@@ -131,6 +142,9 @@ class Article(models.Model):
     source = models.URLField(max_length=200, verbose_name='источник', null=True, blank=True)
     created = models.DateTimeField(auto_now=True, verbose_name='дата создания')
 
+    def get_absolute_url(self):
+        return reverse('read_article', kwargs={'article_id': self.id})
+
 
 class Paragraph(models.Model):
 
@@ -139,6 +153,7 @@ class Paragraph(models.Model):
         verbose_name_plural = 'параграфы'
 
     article = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='статья', related_name='paragraph')
+    paragraph_title = models.CharField(max_length=255, verbose_name='заголовок параграфа', null=True, blank=True)
     text = models.TextField(verbose_name='параграф', null=True, blank=True)
 
 
@@ -150,3 +165,15 @@ class ParagraphImage(models.Model):
 
     paragraph = models.ForeignKey(Paragraph, on_delete=models.CASCADE, verbose_name='для параграфа', related_name='image')
     image = models.ImageField(verbose_name='изображение')
+
+
+class ParagraphYoutubeVideo(models.Model):
+
+    class Meta:
+        verbose_name = 'видео с Youtube'
+        verbose_name_plural = 'видео с Youtube'
+
+    paragraph = models.ForeignKey(Paragraph, on_delete=models.CASCADE,
+                                  verbose_name='для параграфа', related_name='youtube_video')
+    source = models.URLField(max_length=255, verbose_name='ссылка на видео', null=True,
+                             help_text='напр. https://www.youtube.com/watch?v=Geek&ab_channel=Hub')

@@ -5,22 +5,26 @@
 {% endblock %}
 
 {% block main %}
-    <table id="content-table-1" style="border: 3px outset lightskyblue">
-        <tr>
-            <th style="width: 75%">Итоговый балл: {{ result_score }}</th>
-            <th>{{ status }}</th>
-        </tr>
-    </table>
-    <table id="content-table-1">
-        <tr>
-            <th style="width: 75%">Вопрос</th>
-            <th>Ответ</th>
-        </tr>
-        {% for question, answer_status in result_table_data.items %}
-            <tr>
-                <td>{{ question }}</td>
-                <td>{{ answer_status }}</td>
+
+    <div class="content-container">
+        <table class="table-content">
+            <tr id="head-table">
+                <th style="width: 75%">Итоговый балл: {{ result_score }}</th>
+                <th>{{ status }}</th>
             </tr>
-        {% endfor %}
-    </table>
+        </table>
+        <table class="table-content">
+            <tr id="head-table">
+                <th style="width: 75%">Вопрос</th>
+                <th>Ответ</th>
+            </tr>
+            {% for question, answer_status in result_table_data.items %}
+                <tr id="rows">
+                    <td>{{ question }}</td>
+                    <td>{{ answer_status }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
 {% endblock %}

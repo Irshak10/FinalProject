@@ -1,33 +1,32 @@
 {% extends 'base-testing.html' %}
 
 {% block title %}
-    Проверяем знания...
+    Доступные тесты
 {% endblock %}
 
 {% block main %}
     {% load static %}
-    {% if user_test_cases %}
-
-        <table id="content-table-1" style="border: 3px outset lightskyblue">
-            <tr>
-                <th>Название</th>
-                <th>Проходной балл</th>
-                <th>Описание</th>
-                <th>Пройти до</th>
-            </tr>
-            {% for test_case in user_test_cases %}
-                <tr>
-                    <td><strong><a href="{% url 'test_case' test_case.id test_case.test_case.id %}">{{ test_case.test_case }}</a></strong></td>
-                    <td>{{ test_case.target_score }}</td>
-                    <td>{{ test_case.test_case.description }}</td>
-                    <td>{{ test_case.date_expired }}</td>
+    <div class="content-container">
+        {% if user_test_cases %}
+            <table class="table-content">
+                <tr id="head-table">
+                    <th>Название</th>
+                    <th>Проходной балл</th>
+                    <th>Описание</th>
+                    <th>Активен до</th>
                 </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <div class="nothing-to-show-message">
-            <div><img src="{% static 'icons/nothing_to_show.png' %}"></div>
-        </div>
-    {% endif %}
+                {% for test_case in user_test_cases %}
+                    <tr id="rows">
+                        <td><strong><a href="{% url 'test_case' test_case.id test_case.test_case.id %}">{{ test_case.test_case }}</a></strong></td>
+                        <td>{{ test_case.target_score }}</td>
+                        <td>{{ test_case.test_case.description }}</td>
+                        <td>{{ test_case.date_expired }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <img src="{% static 'icons/no_content_1.gif' %}" id="no-content" alt="no image">
+        {% endif %}
+    </div>
 
 {% endblock %}

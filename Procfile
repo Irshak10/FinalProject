@@ -1,1 +1,2 @@
-web: gunicorn CorporatePortal.wsgi --log-file -
+web: gunicorn FinalProject.wsgi --log-file -
+worker: celery -A FinalProject worker --beat --loglevel=info

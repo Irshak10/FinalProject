@@ -14,14 +14,25 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from testing.sitemaps import IndexViewSitemap, ArticleSitemap
+from users import views
+
+
+sitemaps = {
+    'index': IndexViewSitemap,
+    'articles': ArticleSitemap,
+}
 
 
 urlpatterns = [
     path('', include('testing.urls')),
     path('', include('users.urls')),
-    path('admin/', admin.site.urls),
+    path('whosyourdaddy/', admin.site.urls),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}),
+    path('password_reset', views.password_reset_request, name='password_reset')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
