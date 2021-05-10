@@ -84,6 +84,9 @@ class UserTestCase(models.Model):
     complete = models.BooleanField(default=False, verbose_name='завершен')
     test_case_result = models.CharField(max_length=20, verbose_name='итоговый результат', null=True, blank=True)
 
+    def __str__(self):
+        return self.test_case.title
+
 
 class UserProgress(models.Model):
 
@@ -144,6 +147,9 @@ class Article(models.Model):
 
     def get_absolute_url(self):
         return reverse('read_article', kwargs={'article_id': self.id})
+
+    def __str__(self):
+        return self.title
 
 
 class Paragraph(models.Model):
