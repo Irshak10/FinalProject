@@ -20,9 +20,14 @@ class Profile(models.Model):
             The method expects only an instance as an argument and must return a string;
         - save - method used to save data to a profile.
     """
+    class Meta:
+        verbose_name = 'профиль'
+        verbose_name_plural = 'профили'
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    profile_picture = models.ImageField(upload_to='static/images', default='static/images/default.png')
-    phone_number = models.PositiveIntegerField(default=0)
+    profile_picture = models.ImageField(upload_to='static/images', default='static/images/default.png',
+                                        verbose_name='картинка профиля')
+    phone_number = models.PositiveIntegerField(default=0, verbose_name='номер телефона')
     accept_email = models.BooleanField(default=True, verbose_name='получать e-mails')
 
     def __str__(self):
@@ -43,7 +48,11 @@ class ConfirmedMail(models.Model):
     Method:
         - __str__ - a standard method that is responsible for displaying information.
     """
-    mails_list = models.CharField(max_length=30)
+    class Meta:
+        verbose_name = 'доверенная почта'
+        verbose_name_plural = 'доверенные почты'
+
+    mails_list = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
         return self.mails_list
