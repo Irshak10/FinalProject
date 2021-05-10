@@ -86,7 +86,7 @@ def update_test_results(user, user_test_id, result_score):
     else:
         user_test.test_case_result = 'Успешно'
     user_test.save()
-    update_user_progress(user_test.user.id, result_score)
+    update_user_progress(user.id, result_score)
     return
 
 
