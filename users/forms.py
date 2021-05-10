@@ -24,7 +24,7 @@ class UserRegisterForm(UserCreationForm):
         email = self.cleaned_data['email'].strip()
         if User.objects.filter(email__iexact=email).exists():
             raise forms.ValidationError('Эта почта уже зарегистрирована')
-        return self.cleaned_data
+        return email
 
 
 class UserUpdateForm(forms.ModelForm):
