@@ -137,8 +137,8 @@ def password_reset_request(request):
                     email_template_name = "users/password_reset_mail.txt"
                     c = {
                         "email": user.email,
-                        'domain': '127.0.0.1:8000',
-                        # 'domain': 'corporate-portal.herokuapp.com',
+                        #'domain': '127.0.0.1:8000',
+                        'domain': 'corporate-portal.herokuapp.com',
                         'site_name': 'Corporate Portal',
                         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                         "user": user,
