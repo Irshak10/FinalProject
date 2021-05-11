@@ -170,7 +170,7 @@ def send_notification_email_task(subject, message, email, html_message):
     @param email: user's email
     @param html_message: html template with message
     """
-    send_mail(subject, message, None, [email], fail_silently=False, html_message=html_message)
+    send_mail(subject, message, None, [email, ], fail_silently=False, html_message=html_message)
 
 
 @shared_task()
