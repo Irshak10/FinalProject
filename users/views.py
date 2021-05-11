@@ -2,8 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
@@ -16,6 +14,7 @@ from users.forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from users.decorators import unauthenticated_user, allowed_mails
 from users.models import Profile
 from testing.models import UserProgress
+from testing.testing_logic import send_notification_email_task
 
 
 @unauthenticated_user
@@ -137,7 +136,7 @@ def password_reset_request(request):
                     email_template_name = "users/password_reset_mail.txt"
                     c = {
                         "email": user.email,
-                        #'domain': '127.0.0.1:8000',
+                        # 'domain': '127.0.0.1:8000',
                         'domain': 'corporate-portal.herokuapp.com',
                         'site_name': 'Corporate Portal',
                         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
@@ -146,10 +145,7 @@ def password_reset_request(request):
                         'protocol': 'https',
                     }
                     email = render_to_string(email_template_name, c)
-                    try:
-                        send_mail(subject, email, 'admin@example.com', [user.email], fail_silently=False)
-                    except BadHeaderError:
-                        return HttpResponse('Invalid header found.')
+                    send_notification_email_task.delay(subject, email, user.email, None)
 
                     messages.success(request, 'На ваш почтовый ящик отправлено сообщение с инструкциями по сбросу '
                                               'пароля')
