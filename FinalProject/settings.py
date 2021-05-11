@@ -189,23 +189,25 @@ MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaw
 
 # Send email options
 
-EMAIL_HOST_USER = 'corporate.learning.courses@gmail.com'
-EMAIL_HOST_PASSWORD = 'RXnJ577jV37v2Mcx'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'corporate.learning.courses@gmail.com'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 
 # Celery config
 
-CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='amqp://localhost')
+CELERY_BROKER_URL = config('CELERY_BROKER_URL')
+CELERY_BROKER_USER = config('CELERY_BROKER_USER')
+CELERY_BROKER_PASSWORD = config('CELERY_BROKER_PASSWORD')
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TIMEZONE = 'UTC'
-CELERY_ENABLE_UTC = True
+# CELERY_TIMEZONE = 'UTC'
+# CELERY_ENABLE_UTC = True
 CELERY_WORKER_DISABLE_RATE_LIMITS = True
 CELERY_BROKER_POOL_LIMIT = 1
 CELERY_BROKER_CONNECTION_TIMEOUT = 10
