@@ -65,6 +65,7 @@ class UserTestCaseAdmin(admin.ModelAdmin):
 class UserProgressAdmin(admin.ModelAdmin):
     list_display = ('user', 'total_number_of_tests_passed', 'average_score', 'average_rating')
     ordering = ('average_rating',)
+    list_display_links = None
 
     # remove 'add' option from page
     def has_add_permission(self, request):
